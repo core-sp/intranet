@@ -22,10 +22,34 @@ class TicketsController extends Controller
         return view('tickets.create', compact('profiles'));
     }
 
-    public function store(Ticket $ticket)
-    {
-        auth()->user()->tickets()->create();
+    public function validateRequest()
+    {   
+        return request()->validate([
+            'title' => 'required',
+            'profile_id' => 'required',
+            'priority' => 'required',
+            'content' => 'required|min:10'
+        ]);
+    }
 
-        return redirect('tickets');
+    public function store()
+    {
+        $ticket = auth()->user()->tickets()->create($this->validateRequest());
+
+        return redirect($ticket->path());
+    }
+
+    public function show(Ticket $ticket)
+    {
+        $this->authorize('view', $ticket);
+
+        return view('tickets.show', compact('ticket'));
+    }
+
+    public function update(Ticket $ticket)
+    {
+        $ticket->changeStatus(request('status'));
+
+        return redirect($ticket->path());
     }
 }

@@ -18,11 +18,14 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->unsignedBigInteger('profile_id');
             $table->boolean('is_admin')->default(false);
+            $table->boolean('is_coordinator')->default(false);
+            $table->unsignedBigInteger('profile_id');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 

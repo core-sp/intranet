@@ -11,14 +11,21 @@ class UserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function a_user_must_have_a_profile()
+    function a_user_can_be_created()
     {
-        $this->withoutExceptionHandling();
+        $user = factory('App\User')->create();
 
-        $profile = factory('App\Profile')->create(['name' => 'CTI']);
+        $this->assertDatabaseHas('users', [
+            'name' => $user->name,
+            'email' => $user->email
+        ]);
+    }
 
-        $user = factory('App\User')->create(['profile_id' => $profile->id]);
+    /** @test */
+    function a_user_can_have_a_profile()
+    {
+        $user = factory('App\User')->create();
 
-        $this->assertEquals('CTI', $user->profile->name);
+        $this->assertEquals(1, $user->profile->count());
     }
 }

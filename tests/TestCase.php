@@ -14,4 +14,13 @@ abstract class TestCase extends BaseTestCase
         $this->actingAs($user);
         return $user;
     }
+
+    protected function signInAsAdmin()
+    {
+        $user = factory('App\User')->create([
+            'is_admin' => 1
+        ]);
+        $this->actingAs($user);
+        return $user;
+    }
 }

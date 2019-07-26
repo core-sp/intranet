@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
+body, html {
+    font-family: 'Roboto', sans-serif;
+}
+
+.col {
+    padding-right: 7.5px;
+    padding-left: 7.5px;
+}
+
+.row {
+    margin-right: -7.5px;
+    margin-left: -7.5px;
+}
+
+.title {
+    vertical-align: middle;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+label {
+    margin-bottom: 2.5px;
+    font-size: 12.5px;
+}
+
+.direct-chat-msg {
+    display: block;
+    width: 100%;
+}
+
+.direct-chat-msg:after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.direct-chat-img {
+    width: 128px;
+    border-radius: 50%;
+    float: left;
+}
+
+.direct-chat-img p {
+    line-height: 1;
+    font-size: 11px;
+    margin-bottom: 0;
+}
+
+.direct-chat-img img {
+    padding: 10px;
+    max-width: 100%;
+    border-radius: 100%;
+}
+
+.right .direct-chat-img {
+    float: right;
+}
+
+.direct-chat-text {
+    border-radius: 0.3rem;
+    position: relative;
+    padding: 10px 20px;
+    background: #d2d6de;
+    border: 1px solid #d2d6de;
+    margin: 5px 0 0 144px;
+    color: #444;
+    display: block;
+}
+
+.direct-chat-text:after,
+.direct-chat-text:before {
+    position: absolute;
+    right: 100%;
+    top: 15px;
+    border: solid transparent;
+    border-right-color: #d2d6de;
+    content: ' ';
+    height: 0;
+    width: 0;
+    pointer-events: none;
+}
+
+.right .direct-chat-text {
+    margin-right: 144px;
+    margin-left: 0;
+}
+
+.right .direct-chat-text:after,
+.right .direct-chat-text:before {
+    right: auto;
+    left: 100%;
+    border-right-color: transparent;
+    border-left-color: #d2d6de;
+}

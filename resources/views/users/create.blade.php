@@ -6,16 +6,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/tickets">Chamados</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Criar Chamado</li>
+            <li class="breadcrumb-item"><a href="/users">Usuários</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Criar Usuário</li>
         </ol>
     </nav>
 </div>
 <div class="container">
-    <form action="/tickets" method="POST">
+    <form action="/users" method="POST">
         @csrf
-        @include('tickets.form', [
-            'title' => 'Criar Chamado'
+        @include('users.form', [
+            'title' => 'Criar Usuário'
         ])
     </form>
 </div>

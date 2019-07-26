@@ -1,17 +1,28 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\User;
 
 class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        $user = new App\User();
-        $user->name = 'Lucas Arbex';
-        $user->email = 'desenvolvimento@core-sp.org.br';
-        $user->is_admin = 1;
-        $user->profile_id = 1;
-        $user->password = bcrypt('admin102030');
-        $user->save();
+        User::create([
+            'name' => 'Lucas Arbex',
+            'email' => 'desenvolvimento@core-sp.org.br',
+            'is_admin' => 1,
+            'is_coordinator' => 1,
+            'profile_id' => 1,
+            'password' => 'admin102030'
+        ]);
+
+        User::create([
+            'name' => 'Anderson Martins',
+            'email' => 'anderson@gmail.com',
+            'is_admin' => 0,
+            'is_coordinator' => 0,
+            'profile_id' => 2,
+            'password' => 'anderson'
+        ]);
     }
 }
