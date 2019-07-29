@@ -17,6 +17,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/users', 'UsersController@index');
     Route::get('/users/create', 'UsersController@create');
     Route::post('/users', 'UsersController@store');
+    // Profiles
+    Route::get('/profiles', 'ProfilesController@index');
+    Route::get('/profiles/create', 'ProfilesController@create');
+    Route::post('/profiles', 'ProfilesController@store');
     // Tickets
     Route::get('/tickets', 'TicketsController@index');
     Route::get('/tickets/create', 'TicketsController@create');

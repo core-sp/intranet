@@ -28,6 +28,9 @@ class InteractionsController extends Controller
 
         $ticket->addInteraction($this->validateRequest());
 
-        return redirect($ticket->path());
+        return redirect($ticket->path())->with([
+            'message' => 'Resposta emitida com sucesso',
+            'class' => 'alert-success'
+        ]);
     }
 }

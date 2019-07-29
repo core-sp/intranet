@@ -41,8 +41,6 @@ class InteractionsTest extends TestCase
     /** @test */
     function tickets_owner_can_create_interactions()
     {
-        $this->withoutExceptionHandling();
-
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
@@ -65,7 +63,7 @@ class InteractionsTest extends TestCase
     }
 
     /** @test */
-    function user_with_the_same_profile_as_the_ticket_can_create_interactions()
+    function non_owners_can_create_interactions_on_the_ticket()
     {
         $user = $this->signIn();
 
@@ -76,6 +74,25 @@ class InteractionsTest extends TestCase
         $this->post($ticket->path() . '/interactions', $attributes = factory('App\Interaction')->raw());
 
         $this->assertDatabaseHas('interactions', [
+            'content' => $attributes['content']
+        ]);
+    }
+
+    /** @test */
+    function non_owners_cannot_interact_if_ticket_status_is_finished()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $user->profile->id,
+            'status' => 'Encerrado'
+        ]);
+
+        $this
+            ->post($ticket->path() . '/interactions', $attributes = factory('App\Interaction')->raw())
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('interactions', [
             'content' => $attributes['content']
         ]);
     }

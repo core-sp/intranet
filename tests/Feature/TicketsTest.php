@@ -45,10 +45,15 @@ class TicketsTest extends TestCase
 
         $this->get('/tickets')->assertOk();
 
-        $response = $this->followingRedirects()->post('/tickets', $attributes = factory('App\Ticket')->raw());
+        $response = $this
+            ->followingRedirects()
+            ->post('/tickets', $attributes = factory('App\Ticket')->raw());
 
-        $response
-            ->assertSee($attributes['title']);
+        $response->assertSee($attributes['title']);
+
+        $this->assertDatabaseHas('tickets', [
+            'title' => $attributes['title']
+        ]);
     }
 
     /** @test */
@@ -161,13 +166,13 @@ class TicketsTest extends TestCase
     }
     
     /** @test */
-    function an_user_with_the_same_profile_as_the_ticket_can_change_its_status()
+    function non_owners_can_finish_a_ticket()
     {
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create(['profile_id' => $user->profile->id]);
 
-        $ticket->changeStatus('Encerrado');
+        $this->patch($ticket->path(), ['status' => 'Encerrado']);
 
         $this->assertDatabaseHas('tickets', [
             'title' => $ticket->title,
@@ -176,16 +181,48 @@ class TicketsTest extends TestCase
     }
 
     /** @test */
-    function a_ticket_owner_can_change_its_status()
+    function a_ticket_owner_can_complete_a_ticket()
     {
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create(['user_id' => $user->id]);
 
-        $ticket->changeStatus('Concluído');
+        $this->patch($ticket->path(), ['status' => 'Concluído']);
 
         $this->assertDatabaseHas('tickets', [
             'title' => $ticket->title,
+            'status' => 'Concluído'
+        ]);
+    }
+
+    /** @test */
+    function an_owner_cannot_finish_a_ticket()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create(['user_id' => $user->id]);
+
+        $this
+            ->patch($ticket->path(), ['status' => 'Encerrado'])
+            ->assertStatus(403);
+        
+        $this->assertDatabaseMissing('tickets', [
+            'status' => 'Encerrado'
+        ]);
+    }
+
+    /** @test */
+    function non_owners_cannot_mark_a_ticket_as_complete()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create(['profile_id' => $user->profile->id]);
+
+        $this
+            ->patch($ticket->path(), ['status' => 'Concluído'])
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('tickets', [
             'status' => 'Concluído'
         ]);
     }

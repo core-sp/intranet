@@ -10,6 +10,22 @@
 </div>
 <div class="container">
     <div class="row justify-content-center">
+        @can('create', 'App\User')
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-users"></i> Usuários</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0 list-unstyled">
+                        <li><a href="/users">Lista de usuários</a></li>
+                        <li><a href="/users/create">Criar usuário</a></li>
+                        <li><a href="/profiles">Perfis</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endcan
         <div class="col">
             <div class="card">
                 <div class="card-header">
@@ -23,21 +39,6 @@
                 </div>
             </div>
         </div>
-        @can('create', 'App\User')
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="mb-0"><i class="fas fa-users"></i> Usuários</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="mb-0 list-unstyled">
-                        <li><a href="/users">Lista de usuários</a></li>
-                        <li><a href="/users/create">Criar usuário</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        @endcan
         <div class="col">
             <div class="card">
                 <div class="card-header">

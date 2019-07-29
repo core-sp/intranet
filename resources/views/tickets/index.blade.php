@@ -18,7 +18,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <h5>Chamados criados por você</h5>
+            <h5>Seus chamados</h5>
         </div>
     </div>
     <div class="row">

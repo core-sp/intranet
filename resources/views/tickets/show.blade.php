@@ -2,6 +2,14 @@
 
 @section('content')
 
+@if(Session::has('message'))
+    <div class="container mb-3">
+        <div class="alert {{ Session::has('class') ? Session::get('class') : 'alert-info' }}">
+            <p class="mb-0"><strong>{{ Session::get('message') }}</strong></p>
+        </div>
+    </div>
+@endif
+
 <div class="container mb-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -11,65 +19,55 @@
         </ol>
     </nav>
 </div>
-@can('interact', $ticket)
-<div class="container mb-3">
-    <a 
-        class="btn btn-primary"
-        data-toggle="collapse"
-        href="#collapse-interaction"
-        role="button"
-    >
-        Responder
-    </a>
-    @can('finish', $ticket)
-    <form action="{{ $ticket->path() }}" method="POST" class="d-inline">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="status" value="Encerrado">
-        <button 
-            type="submit"
-            class="btn btn-warning"
-        >
-            Finalizar chamado
-        </button>
-    </form>
-    @endcan
-    @can('close', $ticket)
-    <form action="{{ $ticket->path() }}" method="POST" class="d-inline">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="status" value="Concluído">
-        <button 
-            type="submit"
-            class="btn btn-success"
-        >
-            Dar baixa
-        </button>
-    </form>
-    @endcan
-    <div class="collapse mt-2" id="collapse-interaction">
-        <div class="card card-body">
-            <form action="{{ $ticket->path() . '/interactions' }}" method="POST">
+@if($ticket->canInteract() || changeStatusBtn($ticket))
+    <div class="container mb-3">
+        @if($ticket->canInteract())
+            <a 
+                class="btn btn-primary"
+                data-toggle="collapse"
+                href="#collapse-interaction"
+                role="button"
+            >
+                Responder
+            </a>
+            @if(changeStatusBtn($ticket))
+            <form action="{{ $ticket->path() }}" method="POST" class="d-inline">
                 @csrf
-                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-                <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                <div class="form-group">
-                    <textarea
-                        name="content"
-                        id="content"
-                        rows="5"
-                        placeholder="Descrição"
-                        class="form-control"
-                    ></textarea>
-                </div>
-                <div class="form-group mb-0 text-right">
-                    <button type="submit" class="btn btn-primary">Responder</button>
-                </div>
+                @method('PATCH')
+                <input type="hidden" name="status" value="{{ changeStatusBtn($ticket)['value'] }}">
+                <button 
+                    type="submit"
+                    class="btn {{ changeStatusBtn($ticket)['class'] }}"
+                >
+                    {{ changeStatusBtn($ticket)['text'] }}
+                </button>
             </form>
-        </div>
+            @endif
+            <div class="collapse mt-2" id="collapse-interaction">
+                <div class="card card-body">
+                    <form action="{{ $ticket->path() . '/interactions' }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                        <div class="form-group">
+                            <textarea
+                                name="content"
+                                id="content"
+                                rows="5"
+                                placeholder="Descrição"
+                                class="form-control"
+                            ></textarea>
+                        </div>
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-primary">Responder</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endif
     </div>
-</div>
-@endcan
+@endif
+
 <div class="container">
     <div class="card">
         <div class="card-header">

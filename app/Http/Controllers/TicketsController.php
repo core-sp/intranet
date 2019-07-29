@@ -36,7 +36,10 @@ class TicketsController extends Controller
     {
         $ticket = auth()->user()->tickets()->create($this->validateRequest());
 
-        return redirect($ticket->path());
+        return redirect($ticket->path())->with([
+            'message' => 'Chamado criado com sucesso',
+            'class' => 'alert-success'
+        ]);
     }
 
     public function show(Ticket $ticket)
@@ -50,6 +53,9 @@ class TicketsController extends Controller
     {
         $ticket->changeStatus(request('status'));
 
-        return redirect($ticket->path());
+        return redirect($ticket->path())->with([
+            'message' => 'Chamado ' . request('status'),
+            'class' => 'alert-info'
+        ]);
     }
 }

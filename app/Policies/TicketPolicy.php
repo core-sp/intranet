@@ -19,14 +19,4 @@ class TicketPolicy
     {
         return $user->is($ticket->owner) || $user->profile->id === $ticket->profile->id;
     }
-
-    public function close(User $user, Ticket $ticket)
-    {
-        return $user->is($ticket->owner);
-    }
-
-    public function finish(User $user, Ticket $ticket)
-    {
-        return $user->profile->id === $ticket->profile->id;
-    }
 }

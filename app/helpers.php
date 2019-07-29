@@ -38,3 +38,24 @@ function badge($status)
         break;
     }
 }
+
+function changeStatusBtn($ticket)
+{
+    if(auth()->user()->is($ticket->owner)) {
+        $data = [
+            'value' => 'Concluído',
+            'class' => 'btn-success',
+            'text' => 'Finalizar chamado'
+        ];
+        return $data;
+    } elseif(auth()->user()->isNot($ticket->owner)) {
+        $data = [
+            'value' => 'Encerrado',
+            'class' => 'btn-warning',
+            'text' => 'Encerrar chamado'
+        ];
+        return $data;
+    } else {
+        return false;
+    }
+}

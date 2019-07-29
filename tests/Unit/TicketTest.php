@@ -42,4 +42,26 @@ class TicketTest extends TestCase
 
         $this->assertEquals(2, $ticket->interactions->count());
     }
+
+    /** @test */
+    function tickets_marked_as_completed_cannot_have_more_interactions()
+    {
+        $ticket = factory('App\Ticket')->create(['status' => 'Concluído']);
+
+        $this->expectExceptionMessage('Não é possível adicionar uma nova interação à este chamado');
+
+        $attributes = factory('App\Interaction')->raw(['ticket_id' => $ticket->id]);
+
+        $ticket->addInteraction($attributes);
+    }
+
+    /** @test */
+    function tickets_marked_as_completed_cannot_have_their_status_changed()
+    {
+        $ticket = factory('App\Ticket')->create(['status' => 'Concluído']);
+
+        $this->expectExceptionMessage('Não é possível alterar o status deste chamado');
+
+        $ticket->changeStatus('Em aberto');
+    }
 }
