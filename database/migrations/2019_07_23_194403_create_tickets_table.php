@@ -21,10 +21,12 @@ class CreateTicketsTable extends Migration
             $table->string('priority');
             $table->text('content');
             $table->string('status')->default('Em aberto');
+            $table->unsignedBigInteger('respondent_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
+            $table->foreign('respondent_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

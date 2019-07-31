@@ -23,11 +23,14 @@ class TicketTest extends TestCase
     {
         $ticket = factory('App\Ticket')->create();
 
-        $ticket->addInteraction($attributes = factory('App\Interaction')->raw());
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'content' => 'Teste de conteúdo'
+        ]);
 
         $this->assertEquals(1, $ticket->interactions->count());
         $this->assertDatabaseHas('interactions', [
-            'content' => $attributes['content']
+            'content' => 'Teste de conteúdo'
         ]);
     }
 
@@ -44,24 +47,12 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    function tickets_marked_as_completed_cannot_have_more_interactions()
+    function a_ticket_must_be_associated_with_a_profile()
     {
-        $ticket = factory('App\Ticket')->create(['status' => 'Concluído']);
+        $this->signIn();
 
-        $this->expectExceptionMessage('Não é possível adicionar uma nova interação à este chamado');
+        $attributes = factory('App\Ticket')->raw(['profile_id' => '']);
 
-        $attributes = factory('App\Interaction')->raw(['ticket_id' => $ticket->id]);
-
-        $ticket->addInteraction($attributes);
-    }
-
-    /** @test */
-    function tickets_marked_as_completed_cannot_have_their_status_changed()
-    {
-        $ticket = factory('App\Ticket')->create(['status' => 'Concluído']);
-
-        $this->expectExceptionMessage('Não é possível alterar o status deste chamado');
-
-        $ticket->changeStatus('Em aberto');
+        $this->post('/tickets', $attributes)->assertSessionHasErrors('profile_id');
     }
 }

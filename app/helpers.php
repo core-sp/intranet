@@ -41,14 +41,14 @@ function badge($status)
 
 function changeStatusBtn($ticket)
 {
-    if(auth()->user()->is($ticket->owner)) {
+    if(auth()->user()->can('close', $ticket) && $ticket->status !== 'Concluído') {
         $data = [
             'value' => 'Concluído',
             'class' => 'btn-success',
             'text' => 'Finalizar chamado'
         ];
         return $data;
-    } elseif(auth()->user()->isNot($ticket->owner)) {
+    } elseif(auth()->user()->can('finish', $ticket) && $ticket->status !== 'Encerrado') {
         $data = [
             'value' => 'Encerrado',
             'class' => 'btn-warning',

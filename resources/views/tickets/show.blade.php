@@ -19,16 +19,35 @@
         </ol>
     </nav>
 </div>
-@if($ticket->canInteract() || changeStatusBtn($ticket))
+@if($ticket->respondent_id === null)
+    @can('assign', $ticket)
+        <div class="container">
+            <form action="{{ $ticket->path() }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <div class="form-group">
+                    <label for="respondent">Atribuir usuário ao chamado</label>
+                    <select name="respondent_id" id="respondent" class="form-control w-auto" onchange="this.form.submit()">
+                        <option value="" disabled selected>Selecione o usuário...</option>
+                        @foreach($possibleRespondents as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
+        </div>
+    @endcan
+@endif
+@if($ticket->status !== 'Concluído')
     <div class="container mb-3">
-        @if($ticket->canInteract())
+        @can('interact', $ticket)
             <a 
                 class="btn btn-primary"
                 data-toggle="collapse"
                 href="#collapse-interaction"
                 role="button"
             >
-                Responder
+                Responder <i class="fas fa-angle-down"></i>
             </a>
             @if(changeStatusBtn($ticket))
             <form action="{{ $ticket->path() }}" method="POST" class="d-inline">
@@ -64,7 +83,7 @@
                     </form>
                 </div>
             </div>
-        @endif
+        @endcan
     </div>
 @endif
 

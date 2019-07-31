@@ -28,6 +28,11 @@ class Ticket extends Model
         return '/tickets/' . $this->id;
     }
 
+    public function respondent()
+    {
+        return $this->belongsTo('App\User', 'respondent_id');
+    }
+
     public function interactions()
     {
         return $this->hasMany('App\Interaction')->latest();
@@ -35,8 +40,6 @@ class Ticket extends Model
 
     public function addInteraction($attributes)
     {
-        $this->permissionsToInteract();
-
         $this->update(['status' => 'Em aberto']);
         
         return $this->interactions()->create($attributes);
@@ -44,50 +47,11 @@ class Ticket extends Model
 
     public function changeStatus($string)
     {
-        $this->permissionsToChangeStatus();
-
         $this->update(['status' => $string]);
     }
 
-    protected function isCompleted()
+    public function assignRespondent($respondent_id)
     {
-        return $this->status === 'Concluído' ? true : false;
-    }
-
-    protected function isFinished()
-    {
-        return $this->status === 'Encerrado' ? true : false;
-    }
-
-    public function canInteract()
-    {
-        return $this->isCompleted() || $this->isFinished() && auth()->user()->isNot($this->owner) ? false : true;
-    }
-
-    protected function permissionsToInteract()
-    {
-        if($this->isCompleted())
-            throw new \Exception('Não é possível adicionar uma nova interação à este chamado');
-        elseif($this->isFinished() && auth()->user()->isNot($this->owner))
-            abort(403);
-    }
-
-    protected function permissionsToChangeStatus()
-    {
-        if($this->status === 'Concluído')
-            throw new \Exception('Não é possível alterar o status deste chamado');
-
-        if($this->ownerTryingToFinish() || $this->nonOwnerTryingToClose())
-            abort(403);
-    }
-
-    protected function ownerTryingToFinish()
-    {
-        return auth()->user()->is($this->owner) && request()->status === 'Encerrado' ? true : false;
-    }
-
-    protected function nonOwnerTryingToClose()
-    {
-        return auth()->user()->isNot($this->owner) && request()->status === 'Concluído' ? true : false;
+        $this->update(['respondent_id' => $respondent_id]);
     }
 }

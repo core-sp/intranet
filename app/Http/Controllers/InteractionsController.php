@@ -24,6 +24,9 @@ class InteractionsController extends Controller
 
     public function store(Ticket $ticket)
     {
+        if($ticket->status === 'Concluído')
+            abort(403);
+
         $this->authorize('interact', $ticket);
 
         $ticket->addInteraction($this->validateRequest());

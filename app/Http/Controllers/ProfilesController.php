@@ -30,6 +30,8 @@ class ProfilesController extends Controller
 
     public function store(Profile $profile)
     {
+        $this->authorize('create', $profile);
+
         $profile->create($this->validateRequest());
 
         return redirect('/profiles')->with([

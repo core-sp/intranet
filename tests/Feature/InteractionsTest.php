@@ -63,12 +63,32 @@ class InteractionsTest extends TestCase
     }
 
     /** @test */
-    function non_owners_can_create_interactions_on_the_ticket()
+    function non_respondents_cannot_create_interactions()
     {
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
-            'profile_id' => $user->profile->id
+            'respondent_id' => 2
+        ]);
+
+        $attributes = factory('App\Interaction')->raw();
+
+        $this->post($ticket->path() . '/interactions', $attributes)->assertStatus(403);
+
+        $this->assertDatabaseMissing('interactions', [
+            'content' => $attributes['content']
+        ]);
+    }
+
+    /** @test */
+    function respondents_can_create_interactions_on_the_ticket()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'respondent_id' => $user->id
         ]);
 
         $this->post($ticket->path() . '/interactions', $attributes = factory('App\Interaction')->raw());
@@ -79,7 +99,7 @@ class InteractionsTest extends TestCase
     }
 
     /** @test */
-    function non_owners_cannot_interact_if_ticket_status_is_finished()
+    function respondents_cannot_interact_if_ticket_status_is_finished()
     {
         $user = $this->signIn();
 

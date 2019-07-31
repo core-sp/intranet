@@ -45,6 +45,9 @@ class UsersController extends Controller
 
         $user->create($this->validateRequest());
 
-        return redirect('/');
+        return redirect('/users')->with([
+            'message' => 'Usuário criado com sucesso',
+            'class' => 'alert-success'
+        ]);
     }
 }

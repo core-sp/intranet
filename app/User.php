@@ -43,9 +43,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Ticket')->latest();
     }
 
-    public function ticketsParticipating()
+    public function ticketsWithoutAttribution()
     {
-        return Ticket::where('profile_id', $this->profile->id)->get();
+        return Ticket::where('profile_id', $this->profile->id)
+            ->whereNull('respondent_id')
+            ->get();
+    }
+
+    public function ticketsResponding()
+    {
+        return Ticket::where('respondent_id', $this->id)->get();
     }
 
     public function isAdmin()
@@ -56,5 +63,10 @@ class User extends Authenticatable
     public function isCoordinator()
     {
         return auth()->user()->is_coordinator === true ? true : false;
+    }
+
+    public function hasSameTicketProfile($ticket)
+    {
+        return $this->profile->id === $ticket->profile->id ? true : false;
     }
 }
