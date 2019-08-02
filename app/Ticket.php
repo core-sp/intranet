@@ -35,7 +35,7 @@ class Ticket extends Model
 
     public function interactions()
     {
-        return $this->hasMany('App\Interaction')->latest();
+        return $this->hasMany('App\Interaction')->orderBy('created_at', 'DESC');
     }
 
     public function addInteraction($attributes)

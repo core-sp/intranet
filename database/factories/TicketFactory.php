@@ -14,5 +14,7 @@ $factory->define(Ticket::class, function (Faker $faker) {
         'content' => $faker->paragraph,
         'status' => 'Em aberto',
         'respondent_id' => factory('App\User'),
+        'created_at' => now(),
+        'updated_at' => now()
     ];
 });

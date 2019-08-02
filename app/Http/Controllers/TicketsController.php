@@ -11,9 +11,12 @@ class TicketsController extends Controller
 {
     public function index()
     {
-        $tickets = auth()->user()->tickets;
+        return view('tickets.index');
+    }
 
-        return view('tickets.index', compact('tickets'));
+    public function created()
+    {
+        return view('tickets.created');
     }
 
     public function create()

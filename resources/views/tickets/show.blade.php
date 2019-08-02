@@ -42,12 +42,12 @@
     <div class="container mb-3">
         @can('interact', $ticket)
             <a 
-                class="btn btn-primary"
+                class="btn btn-primary dropdown-toggle"
                 data-toggle="collapse"
                 href="#collapse-interaction"
                 role="button"
             >
-                Responder <i class="fas fa-angle-down"></i>
+                Responder
             </a>
             @if(changeStatusBtn($ticket))
             <form action="{{ $ticket->path() }}" method="POST" class="d-inline">

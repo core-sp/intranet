@@ -50,6 +50,11 @@ class User extends Authenticatable
             ->get();
     }
 
+    public function ticketsFromProfile()
+    {
+        return Ticket::where('profile_id', $this->profile->id)->get();
+    }
+
     public function ticketsResponding()
     {
         return Ticket::where('respondent_id', $this->id)->get();

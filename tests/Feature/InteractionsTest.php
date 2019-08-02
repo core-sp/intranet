@@ -116,4 +116,108 @@ class InteractionsTest extends TestCase
             'content' => $attributes['content']
         ]);
     }
+
+    /** @test */
+    function an_owner_of_the_ticket_can_see_pending_response_status()
+    {
+        $john = $this->signIn();
+        $jane = factory('App\User')->create();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $john->id,
+            'respondent_id' => $jane->id
+        ]);
+
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $jane->id
+        ]);
+
+        $this->assertEquals($ticket->interactions->first()->user_id, $jane->id);
+
+        $this->get('/tickets/created')->assertSee('NECESSITA INTERAÇÃO');
+    }
+
+    /** @test */
+    function an_owner_of_the_ticket_can_see_awaiting_status()
+    {
+        $john = $this->signIn();
+        $jane = factory('App\User')->create();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $john->id,
+            'respondent_id' => $jane->id
+        ]);
+
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $jane->id
+        ]);
+
+        $this->assertEquals($ticket->interactions->first()->user_id, $jane->id);
+
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $john->id,
+            'created_at' => date("Y-m-d H:i:s", time() + 1)
+        ]);
+
+        $this->assertEquals($ticket->fresh()->interactions->first()->id, 2);
+        $this->assertEquals($ticket->fresh()->interactions->first()->user_id, $john->id);
+
+        $this->get('/tickets/created')->assertSee('AGUARDANDO INTERAÇÃO');
+    }
+
+    /** @test */
+    /** @test */
+    function respondents_can_see_pending_response_status()
+    {
+        $john = $this->signIn();
+        $jane = factory('App\User')->create();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $jane->id,
+            'respondent_id' => $john->id
+        ]);
+
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $john->id
+        ]);
+
+        $this->assertEquals($ticket->interactions->first()->user_id, $john->id);
+
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $jane->id,
+            'created_at' => date("Y-m-d H:i:s", time() + 1)
+        ]);
+
+        $this->assertEquals($ticket->fresh()->interactions->first()->id, 2);
+        $this->assertEquals($ticket->fresh()->interactions->first()->user_id, $jane->id);
+        
+        $this->get('/tickets')->assertSee('NECESSITA INTERAÇÃO');
+    }
+
+    /** @test */
+    function respondents_can_see_awaiting_status()
+    {
+        $john = $this->signIn();
+        $jane = factory('App\User')->create();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $jane->id,
+            'respondent_id' => $john->id
+        ]);
+
+        factory('App\Interaction')->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $john->id
+        ]);
+
+        $this->assertEquals($ticket->fresh()->interactions->first()->id, 1);
+        $this->assertEquals($ticket->fresh()->interactions->first()->user_id, $john->id);
+
+        $this->get('/tickets')->assertSee('AGUARDANDO INTERAÇÃO');
+    }
 }

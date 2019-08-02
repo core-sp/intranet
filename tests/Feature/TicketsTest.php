@@ -62,7 +62,7 @@ class TicketsTest extends TestCase
         $ticket = factory('App\Ticket')->create(['user_id' => auth()->id()]);
 
         $this
-            ->get('/tickets')
+            ->get('/tickets/created')
             ->assertSee($ticket->title)
             ->assertSee($ticket->profile->name);
 

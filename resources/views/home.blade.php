@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <ul class="mb-0 list-unstyled">
-                        <li><a href="/users">Lista de usuários</a></li>
+                        <li><a href="/users">Todos os usuários</a></li>
                         <li><a href="/users/create">Criar usuário</a></li>
                         <li><a href="/profiles">Perfis</a></li>
                     </ul>
@@ -33,7 +33,8 @@
                 </div>
                 <div class="card-body">
                     <ul class="mb-0 list-unstyled">
-                        <li><a href="/tickets">Ver lista de chamados</a></li>
+                        <li><a href="/tickets">Chamados da área: {{ auth()->user()->profile->name }}</a></li>
+                        <li><a href="/tickets/created">Meus chamados</a></li>
                         <li><a href="/tickets/create">Criar chamado</a></li>
                     </ul>
                 </div>
