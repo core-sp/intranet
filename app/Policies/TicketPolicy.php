@@ -17,7 +17,7 @@ class TicketPolicy
 
     public function interact(User $user, Ticket $ticket)
     {
-        return $user->is($ticket->owner) || $user->is($ticket->respondent);
+        return $user->is($ticket->owner) || $ticket->respondents->contains($user->id);
     }
 
     public function close(User $user, Ticket $ticket)
@@ -27,7 +27,7 @@ class TicketPolicy
 
     public function finish(User $user, Ticket $ticket)
     {
-        return $user->is($ticket->respondent);
+        return $ticket->respondents->contains($user->id);
     }
 
     public function assign(User $user, Ticket $ticket)

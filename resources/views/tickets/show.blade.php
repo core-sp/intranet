@@ -2,14 +2,6 @@
 
 @section('content')
 
-@if(Session::has('message'))
-    <div class="container mb-3">
-        <div class="alert {{ Session::has('class') ? Session::get('class') : 'alert-info' }}">
-            <p class="mb-0"><strong>{{ Session::get('message') }}</strong></p>
-        </div>
-    </div>
-@endif
-
 <div class="container mb-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -19,25 +11,41 @@
         </ol>
     </nav>
 </div>
-@if($ticket->respondent_id === null)
-    @can('assign', $ticket)
-        <div class="container">
-            <form action="{{ $ticket->path() }}" method="POST">
-                @csrf
-                @method('PATCH')
-                <div class="form-group">
-                    <label for="respondent">Atribuir usuário ao chamado</label>
-                    <select name="respondent_id" id="respondent" class="form-control w-auto" onchange="this.form.submit()">
-                        <option value="" disabled selected>Selecione o usuário...</option>
-                        @foreach($possibleRespondents as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </form>
+@can('assign', $ticket)
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="{{ $ticket->path() . '/update-respondent' }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="form-group">
+                        <label for="respondent">Atribuir usuário ao chamado</label>
+                        <select name="user_id" id="respondent" class="form-control" onchange="this.form.submit()">
+                            <option value="" disabled selected>Selecione o usuário...</option>
+                            @foreach($ticket->possibleRespondents() as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col">
+                <form action="{{ $ticket->path() . '/update-profile' }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="form-group">
+                        <label for="profile">Ou então, atribua o chamado à outra área</label>
+                        <select name="profile_id" id="profile" class="form-control" onchange="this.form.submit()">
+                            @foreach ($ticket->possibleProfiles() as $profile)
+                                <option value="{{ $profile->id }}">{{ $profile->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
         </div>
-    @endcan
-@endif
+    </div>
+@endcan
 @if($ticket->status !== 'Concluído')
     <div class="container mb-3">
         @can('interact', $ticket)
@@ -50,7 +58,7 @@
                 Responder
             </a>
             @if(changeStatusBtn($ticket))
-            <form action="{{ $ticket->path() }}" method="POST" class="d-inline">
+            <form action="{{ $ticket->path() . '/update-status' }}" method="POST" class="d-inline">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="status" value="{{ changeStatusBtn($ticket)['value'] }}">
@@ -101,7 +109,7 @@
                             <img src="{{ gravatar_url($interaction->user->email) }}" />
                             <p class="m-0"><strong>({{ $interaction->user->name }} - {{ $interaction->user->profile->name }})</strong></p>
                         </div>
-                        <div class="direct-chat-text">
+                        <div class="direct-chat-text {{ $ticket->respondents->contains($interaction->user->id) ? 'bg-info' : '' }}">
                             <h5 class="mt-2">{{ $interaction->title }}</h5>
                             <p class="mt-2 mb-2">{{ $interaction->content }}</p>
                         </div>

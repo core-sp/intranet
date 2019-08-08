@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -12,7 +13,7 @@ class UsersController extends Controller
     {
         $this->authorize('view', User::class);
 
-        $users = User::all();
+        $users = User::paginate(20);
 
         return view('users.index', compact('users'));
     }
@@ -31,11 +32,14 @@ class UsersController extends Controller
         return request()->validate([
             'name' => 'required',
             'email' => 'required',
+            'username' => 'required',
             'email_verified_at' => 'nullable',
             'is_admin' => 'boolean',
             'is_coordinator' => 'boolean',
             'profile_id' => 'integer',
-            'password' => 'required'
+            'password' => 'min:6|confirmed',
+        ], [
+            'required' => 'O campo :attribute é obrigatório'
         ]);
     }
 
@@ -47,6 +51,60 @@ class UsersController extends Controller
 
         return redirect('/users')->with([
             'message' => 'Usuário criado com sucesso',
+            'class' => 'alert-success'
+        ]);
+    }
+
+    protected function confirmAuthenticity($user)
+    {
+        auth()->id() !== $user->id ? abort(403) : true;
+    }
+
+    protected function authorizeUpdate($user)
+    {
+        if(auth()->user()->isAdmin()) {
+            return $this->authorize('updateOther', $user);
+        }
+        
+        $this->confirmAuthenticity($user);
+    }
+
+    public function edit(User $user)
+    {
+        $this->authorizeUpdate($user);
+
+        $profiles = Profile::select('id', 'name')->get();
+        
+        return view('users.edit', compact('user', 'profiles'));
+    }
+
+    public function update(User $user)
+    {
+        $this->authorizeUpdate($user);
+
+        $user->update(request()->all());
+
+        return redirect('/')->with([
+            'message' => 'Informações atualizadas com sucesso',
+            'class' => 'alert-success'
+        ]);
+    }
+
+    public function changePasswordView(User $user)
+    {
+        $this->confirmAuthenticity($user);
+
+        return view('users.change-password');
+    }
+
+    public function changePassword(User $user)
+    {
+        $this->confirmAuthenticity($user);
+
+        $user->fill(['password' => request('password')])->save();
+
+        return redirect('/')->with([
+            'message' => 'Senha alterada com sucesso',
             'class' => 'alert-success'
         ]);
     }

@@ -55,4 +55,28 @@ class TicketTest extends TestCase
 
         $this->post('/tickets', $attributes)->assertSessionHasErrors('profile_id');
     }
+
+    /** @test */
+    function a_ticket_may_have_one_respondent()
+    {
+        $ticket = factory('App\Ticket')->create();
+
+        $user = factory('App\User')->create();
+
+        $ticket->assignRespondents($user->id);
+
+        $this->assertEquals(1, count($ticket->respondents));
+    }
+
+    /** @test */
+    function a_ticket_may_have_several_respondents()
+    {
+        $ticket = factory('App\Ticket')->create();
+
+        $users = factory('App\User', 2)->create();
+
+        $ticket->assignRespondents($users);
+        
+        $this->assertEquals(2, count($ticket->respondents));
+    }
 }

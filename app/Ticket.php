@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 class Ticket extends Model
 {
@@ -28,9 +29,9 @@ class Ticket extends Model
         return '/tickets/' . $this->id;
     }
 
-    public function respondent()
+    public function respondents()
     {
-        return $this->belongsTo('App\User', 'respondent_id');
+        return $this->belongsToMany('App\User', 'ticket_respondents');
     }
 
     public function interactions()
@@ -50,8 +51,32 @@ class Ticket extends Model
         $this->update(['status' => $string]);
     }
 
-    public function assignRespondent($respondent_id)
+    public function changeProfile($id)
     {
-        $this->update(['respondent_id' => $respondent_id]);
+        $this->update(['profile_id' => $id]);
+    }
+
+    public function possibleRespondents()
+    {
+        $except = $this->respondents->pluck('id')->toArray();
+
+        return \App\User::select('id', 'name')
+            ->where('profile_id', $this->profile->id)
+            ->get()
+            ->except($except);
+    }
+
+    public function possibleProfiles()
+    {
+        return \App\Profile::select('id', 'name')
+            ->where('id', '!=', $this->profile->id)
+            ->get();
+    }
+
+    public function assignRespondents($users)
+    {
+        $users instanceof Collection ?? $users = $users->pluck('id')->toArray();
+
+        return $this->respondents()->attach($users);
     }
 }

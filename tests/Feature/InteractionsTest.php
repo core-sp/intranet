@@ -65,11 +65,11 @@ class InteractionsTest extends TestCase
     /** @test */
     function non_respondents_cannot_create_interactions()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
-        $ticket = factory('App\Ticket')->create([
-            'respondent_id' => 2
-        ]);
+        $ticket = factory('App\Ticket')->create();
+
+        $this->assertEquals(0, count($ticket->respondents));
 
         $attributes = factory('App\Interaction')->raw();
 
@@ -87,9 +87,9 @@ class InteractionsTest extends TestCase
 
         $user = $this->signIn();
 
-        $ticket = factory('App\Ticket')->create([
-            'respondent_id' => $user->id
-        ]);
+        $ticket = factory('App\Ticket')->create();
+
+        $ticket->assignRespondents($user);
 
         $this->post($ticket->path() . '/interactions', $attributes = factory('App\Interaction')->raw());
 
@@ -125,8 +125,9 @@ class InteractionsTest extends TestCase
 
         $ticket = factory('App\Ticket')->create([
             'user_id' => $john->id,
-            'respondent_id' => $jane->id
         ]);
+
+        $ticket->assignRespondents($jane);
 
         factory('App\Interaction')->create([
             'ticket_id' => $ticket->id,
@@ -145,9 +146,10 @@ class InteractionsTest extends TestCase
         $jane = factory('App\User')->create();
 
         $ticket = factory('App\Ticket')->create([
-            'user_id' => $john->id,
-            'respondent_id' => $jane->id
+            'user_id' => $john->id
         ]);
+
+        $ticket->assignRespondents($jane);
 
         factory('App\Interaction')->create([
             'ticket_id' => $ticket->id,
@@ -172,13 +174,15 @@ class InteractionsTest extends TestCase
     /** @test */
     function respondents_can_see_pending_response_status()
     {
+        $this->withoutExceptionHandling();
         $john = $this->signIn();
         $jane = factory('App\User')->create();
 
         $ticket = factory('App\Ticket')->create([
-            'user_id' => $jane->id,
-            'respondent_id' => $john->id
+            'user_id' => $jane->id
         ]);
+
+        $ticket->assignRespondents($john);
 
         factory('App\Interaction')->create([
             'ticket_id' => $ticket->id,
@@ -206,9 +210,10 @@ class InteractionsTest extends TestCase
         $jane = factory('App\User')->create();
 
         $ticket = factory('App\Ticket')->create([
-            'user_id' => $jane->id,
-            'respondent_id' => $john->id
+            'user_id' => $jane->id
         ]);
+
+        $ticket->assignRespondents($john);
 
         factory('App\Interaction')->create([
             'ticket_id' => $ticket->id,

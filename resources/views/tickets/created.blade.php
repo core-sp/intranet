@@ -36,29 +36,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse(auth()->user()->tickets as $ticket)
+                            @forelse($pagination = auth()->user()->tickets()->paginate(10) as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
                                     <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
                                     <td>{{ $ticket->profile->name }}</td>
                                     <td>
-                                        @if($ticket->respondent_id === null)
-                                            <h5 class="mb-0">
-                                                <span class="badge badge-dark font-weight-normal">Aguardando atribuição</span>
-                                            </h5>
-                                        @else
-                                            @include('tickets.inc.situation')
-                                        @endif
+                                        @include('tickets.inc.situation')
                                     </td>
                                     <td>
-                                        @if($ticket->interactions->first() !== null)
-                                            @include('tickets.inc.status')
-                                        @else
+                                        @if(count($ticket->respondents) === 0)
                                             <p class="mb-0">
                                                 <small>
-                                                    <i class="far fa-circle"></i> AGUARDANDO ATRIBUIÇÃO
+                                                    <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
                                                 </small>
                                             </p>
+                                        @else
+                                            @include('tickets.inc.status')
                                         @endif
                                     </td>
                                 </tr>
@@ -69,6 +63,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer">
+                    {{ $pagination->links() }}
                 </div>
             </div>
         </div>

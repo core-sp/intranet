@@ -11,6 +11,11 @@ function ticketsPriorities()
     ];
 }
 
+function onlyDate($date)
+{
+    return $date->format('d\/m\/Y');
+}
+
 function dateAndHour($date)
 {
     return $date->format('d\/m\/Y\, \à\s H:i');
@@ -42,19 +47,17 @@ function badge($status)
 function changeStatusBtn($ticket)
 {
     if(auth()->user()->can('close', $ticket) && $ticket->status !== 'Concluído') {
-        $data = [
+        return [
             'value' => 'Concluído',
             'class' => 'btn-success',
             'text' => 'Finalizar chamado'
         ];
-        return $data;
     } elseif(auth()->user()->can('finish', $ticket) && $ticket->status !== 'Encerrado') {
-        $data = [
+        return [
             'value' => 'Encerrado',
             'class' => 'btn-warning',
             'text' => 'Encerrar chamado'
         ];
-        return $data;
     } else {
         return false;
     }

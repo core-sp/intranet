@@ -33,31 +33,24 @@ class User extends Authenticatable
         return $this->belongsTo('App\Profile');
     }
 
-    public function setProfile()
-    {
-        return $this->profile()->create(['name' => 'Teste']);
-    }
-
     public function tickets()
     {
         return $this->hasMany('App\Ticket')->latest();
     }
 
-    public function ticketsWithoutAttribution()
+    public function respondentTickets()
     {
-        return Ticket::where('profile_id', $this->profile->id)
-            ->whereNull('respondent_id')
-            ->get();
+        return $this->belongsToMany('App\Ticket', 'ticket_respondents');
+    }
+
+    public function respondentTicketsWithPagination()
+    {
+        return $this->respondentTickets()->paginate(20);
     }
 
     public function ticketsFromProfile()
     {
-        return Ticket::where('profile_id', $this->profile->id)->get();
-    }
-
-    public function ticketsResponding()
-    {
-        return Ticket::where('respondent_id', $this->id)->get();
+        return Ticket::where('profile_id', $this->profile->id)->take(20)->get();
     }
 
     public function isAdmin()
@@ -73,5 +66,10 @@ class User extends Authenticatable
     public function hasSameTicketProfile($ticket)
     {
         return $this->profile->id === $ticket->profile->id ? true : false;
+    }
+
+    public function path()
+    {
+        return '/users/' . $this->id;
     }
 }

@@ -10,6 +10,7 @@ class UsersTableSeeder extends Seeder
         User::create([
             'name' => 'Lucas Arbex',
             'email' => 'desenvolvimento@core-sp.org.br',
+            'username' => 'lbrazao',
             'is_admin' => 1,
             'is_coordinator' => 1,
             'profile_id' => 1,
@@ -19,6 +20,7 @@ class UsersTableSeeder extends Seeder
         User::create([
             'name' => 'Anderson Martins',
             'email' => 'anderson@gmail.com',
+            'username' => 'anderson',
             'is_admin' => 0,
             'is_coordinator' => 0,
             'profile_id' => 2,

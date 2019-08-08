@@ -114,33 +114,12 @@ class TicketsTest extends TestCase
     }
 
     /** @test */
-    function the_ticket_content_must_have_at_least_10_characters()
-    {
-        $this->signIn();
-
-        $attributes = factory('App\Ticket')->raw(['content' => 'small']);
-
-        $this->post('/tickets', $attributes)->assertSessionHasErrors('content');
-    }
-
-    /** @test */
-    function unauthorized_users_cannot_view_the_ticket()
-    {
-        $this->signIn();
-
-        $ticket = factory('App\Ticket')->create();
-
-        $this->get($ticket->path())->assertStatus(403);
-    }
-
-    /** @test */
     function tickets_from_same_profile_as_user_are_shown_correctly()
     {
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
-            'profile_id' => $user->profile->id,
-            'respondent_id' => null
+            'profile_id' => $user->profile->id
         ]);
 
         $this
@@ -158,12 +137,16 @@ class TicketsTest extends TestCase
     /** @test */
     function respondents_can_finish_a_ticket()
     {
+        $this->withoutExceptionHandling();
+
         $user = $this->signIn();
 
-        $ticket = factory('App\Ticket')->create(['respondent_id' => $user->profile->id]);
+        $ticket = factory('App\Ticket')->create();
+
+        $ticket->assignRespondents($user);
 
         $this
-            ->patch($ticket->path(), ['status' => 'Encerrado'])
+            ->patch($ticket->path() . '/update-status', ['status' => 'Encerrado'])
             ->assertRedirect($ticket->path());
 
         $this->assertEquals('Encerrado', $ticket->fresh()->status);
@@ -177,7 +160,7 @@ class TicketsTest extends TestCase
         $ticket = factory('App\Ticket')->create(['user_id' => $user->id]);
 
         $this
-            ->patch($ticket->path(), ['status' => 'Concluído'])
+            ->patch($ticket->path() . '/update-status', ['status' => 'Concluído'])
             ->assertRedirect($ticket->path());
 
         $this->assertEquals('Concluído', $ticket->fresh()->status);
@@ -208,23 +191,24 @@ class TicketsTest extends TestCase
     }
 
     /** @test */
-    function a_user_with_the_same_profile_as_the_ticket_can_assign_another_user_from_the_same_profile_to_be_respondent()
+    function a_user_with_the_same_profile_as_the_ticket_can_assign_another_user_to_be_respondent()
     {
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
-            'profile_id' => $user->profile->id,
-            'respondent_id' => null
+            'profile_id' => $user->profile->id
         ]);
 
         $userSameProfile = factory('App\User')->create(['profile_id' => $user->profile->id]);
 
         $this
-            ->patch($ticket->path(), ['respondent_id' => $userSameProfile->id])
+            ->patch($ticket->path() . '/update-respondent', ['user_id' => $userSameProfile->id])
             ->assertRedirect($ticket->path());
 
-        $this->assertEquals($userSameProfile->id, $ticket->fresh()->respondent_id);
+        $this->assertTrue($ticket->respondents->contains($userSameProfile->id));
     }
+
+    
 
     /** @test */
     function a_user_can_assign_itself_to_be_respondent()
@@ -232,12 +216,58 @@ class TicketsTest extends TestCase
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
-            'profile_id' => $user->profile->id,
-            'respondent_id' => null
+            'profile_id' => $user->profile->id
         ]);
 
-        $this->patch($ticket->path(), ['respondent_id' => $user->id]);
+        $this->patch($ticket->path() . '/update-respondent', ['user_id' => $user->id]);
 
-        $this->assertEquals($user->id, $ticket->fresh()->respondent_id);
+        $this->assertTrue($ticket->respondents->contains($user->id));
+    }
+
+    /** @test */
+    function a_user_with_the_same_profile_as_the_ticket_can_assign_it_to_other_profiles()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $user->profile->id
+        ]);
+
+        $profile = factory('App\Profile')->create();
+
+        $this->patch($ticket->path() . '/update-profile', ['profile_id' => $profile->id])->assertRedirect('/');
+        $this->assertDatabaseHas('tickets', [
+            'id' => $ticket->id,
+            'profile_id' => $profile->id
+        ]);
+    }
+
+    /** @test */
+    function a_user_cant_assign_the_ticket_profile_with_its_own_profile()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $user->profile->id
+        ]);
+
+        $this->patch($ticket->path() . '/update-profile', ['profile_id' => $ticket->profile->id])->assertStatus(403);
+        $this->assertEquals($ticket->profile->id, $user->profile->id);
+    }
+
+    /** @test */
+    function unauthorized_users_cannot_assign_other_profiles_to_the_ticket()
+    {
+        $this->signIn();
+
+        $ticket = factory('App\Ticket')->create();
+
+        $profile = factory('App\Profile')->create();
+
+        $this->patch($ticket->path() . '/update-profile', ['profile_id' => $profile->id])->assertStatus(403);
+        $this->assertDatabaseMissing('tickets', [
+            'id' => $ticket->id,
+            'profile_id' => $profile->id
+        ]);
     }
 }

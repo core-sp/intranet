@@ -32,15 +32,7 @@ class TicketsController extends Controller
             'title' => 'required',
             'profile_id' => 'required',
             'priority' => 'required',
-            'content' => 'required|min:10'
-        ]);
-    }
-
-    protected function redirect($path, $message, $class)
-    {
-        return redirect($path)->with([
-            'message' => $message,
-            'class' => $class
+            'content' => 'required'
         ]);
     }
 
@@ -48,52 +40,16 @@ class TicketsController extends Controller
     {        
         $ticket = auth()->user()->tickets()->create($this->validateRequest());
 
-        return $this->redirect($ticket->path(), 'Chamado criado com sucesso', 'alert-success');
+        return redirect($ticket->path())->with([
+            'message' => 'Chamado criado com sucesso',
+            'class' => 'alert-success'
+        ]);
     }
 
     public function show(Ticket $ticket)
     {
-        $this->authorize('view', $ticket);
+        $profiles = Profile::select('id', 'name')->get();
 
-        $possibleRespondents = User::select('id', 'name')->where('profile_id', $ticket->profile->id)->get();
-
-        return view('tickets.show', compact('ticket', 'possibleRespondents'));
-    }
-
-    public function update(Ticket $ticket)
-    {
-        if(request('status') !== null) {
-            $this->updateStatus($ticket);
-
-            return $this->redirect($ticket->path(), 'Chamado ' . request('status'), 'alert-success');
-        } else {
-            $this->updateAssignedRespondent($ticket);
-
-            return $this->redirect($ticket->path(), 'Usuário atribuído ao chamado com sucesso', 'alert-success');
-        }        
-    }
-
-    protected function updateStatus($ticket)
-    {
-        $this->protectionToChangeStatus($ticket);
-
-        $ticket->changeStatus(request('status'));
-    }
-
-    protected function updateAssignedRespondent($ticket)
-    {
-        $this->authorize('view', $ticket);
-
-        $ticket->assignRespondent(request('respondent_id'));
-    }
-
-    protected function protectionToChangeStatus($ticket)
-    {
-        $this->authorize('interact', $ticket);
-
-        if(auth()->user()->is($ticket->owner) && request('status') === 'Encerrado')
-            abort(403);
-        elseif(auth()->user()->is($ticket->respondent) && !auth()->user()->is($ticket->owner) && request('status') === 'Concluído')
-            abort(403);
+        return view('tickets.show', compact('ticket', 'profiles'));
     }
 }

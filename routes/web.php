@@ -17,6 +17,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/users', 'UsersController@index');
     Route::get('/users/create', 'UsersController@create');
     Route::post('/users', 'UsersController@store');
+    Route::get('/users/{user}/edit', 'UsersController@edit');
+    Route::patch('/users/{user}', 'UsersController@update');
+    Route::get('/users/{user}/change-password', 'UsersController@changePasswordView');
+    Route::patch('/users/{user}/change-password', 'UsersController@changePassword');
     // Profiles
     Route::get('/profiles', 'ProfilesController@index');
     Route::get('/profiles/create', 'ProfilesController@create');
@@ -27,7 +31,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/tickets/create', 'TicketsController@create');
     Route::post('/tickets', 'TicketsController@store');
     Route::get('/tickets/{ticket}', 'TicketsController@show');
-    Route::patch('/tickets/{ticket}', 'TicketsController@update');
+    Route::patch('/tickets/{ticket}/update-status', 'TicketUpdatesController@updateStatus');
+    Route::patch('/tickets/{ticket}/update-respondent', 'TicketUpdatesController@updateRespondent');
+    Route::patch('/tickets/{ticket}/update-profile', 'TicketUpdatesController@updateProfile');
     // Interactions
     Route::get('/tickets/{ticket}/interactions/create', 'InteractionsController@create');
     Route::post('/tickets/{ticket}/interactions', 'InteractionsController@store');

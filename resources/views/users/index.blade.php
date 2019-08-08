@@ -29,16 +29,18 @@
                                 <th>Código</th>
                                 <th>Usuário</th>
                                 <th>Perfil</th>
-                                <th>Coordenador</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($users as $user)
                                 <tr>
                                     <td>{{ $user->id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->profile->name }}</td>
-                                    <td>{{ $user->isCoordinator() ? 'Sim' : 'Não' }}</td>
+                                    <td>
+                                        {{ $user->name }} {!! $user->is_admin ? '<small><strong>Administrador</strong></small>' : '' !!}
+                                    </td>
+                                    <td>{{ $user->profile->name }} {!! $user->is_coordinator ? '<small><i>(Coordenador)</i></small>' : '' !!}</td>
+                                    <td><a href="{{ $user->path() . '/edit' }}" class="btn btn-sm btn-primary">Editar</a></td>
                                 </tr>
                             @empty
                                 <tr>
@@ -47,6 +49,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer">
+                    {{ $users->links("pagination::bootstrap-4") }}
                 </div>
             </div>
         </div>

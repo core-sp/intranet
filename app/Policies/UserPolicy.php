@@ -18,4 +18,14 @@ class UserPolicy
     {
         return $user->isAdmin();
     }
+
+    public function updateOther(User $user)
+    {
+        return $user->isAdmin();
+    }
+
+    public function updateOwn(User $user)
+    {
+        return $user->id === auth()->id();
+    }
 }

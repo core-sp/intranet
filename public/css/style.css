@@ -95,3 +95,7 @@ label {
     border-right-color: transparent;
     border-left-color: #d2d6de;
 }
+
+.pagination {
+    margin-bottom: 0px;
+}

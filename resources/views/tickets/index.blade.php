@@ -30,15 +30,14 @@
                             <small class="font-weight-light">Emitido por: <span class="font-weight-bold">{{ $ticket->user->name }} ({{ $ticket->user->profile->name }})</span></small>
                         </p>
                         <p class="mb-0" style="line-height:1.1;">
-                            <small class="font-weight-light">Criado em: <span class="font-weight-bold">{{ dateAndHour($ticket->created_at) }}</span></small>
+                            <small class="font-weight-light">Criado em: <span class="font-weight-bold">{{ onlyDate($ticket->created_at) }}</span></small>
                         </p>
-                        @if($ticket->respondent_id !== null)
+                        <p class="mb-0" style="line-height:1.1;">
+                            <small class="font-weight-light">Última interação: <span class="font-weight-bold">{{ onlyDate($ticket->updated_at) }}</span></small>
+                        </p>
+                        @if(count($ticket->respondents) === 0)
                             <p class="mb-0" style="line-height:1.1;">
-                                <small class="font-weight-light">Atribuído à: <span class="font-weight-bold">{{ $ticket->respondent->name }}</span></small>
-                            </p>
-                        @else
-                            <p class="mb-0" style="line-height:1.1;">
-                                <small class="font-weight-bold text-danger"><i class="fas fa-exclamation-circle"></i> NECESSITA ATRIBUIÇÃO DE USUÁRIO</small>
+                                <small class="font-weight-bold text-danger"><i class="fas fa-exclamation-circle"></i> NECESSITA ATRIBUIÇÃO</small>
                             </p>
                         @endif
                         @if(!$loop->last)
@@ -66,32 +65,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse(auth()->user()->ticketsResponding() as $ticket)
+                            @forelse(auth()->user()->respondentTicketsWithPagination() as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
-                                    <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
+                                    <td>
+                                        <a href="{{ $ticket->path() }}">{{ $ticket->title }}</a>
+                                        <p class="mb-0" style="line-height:1.1;">
+                                            <small class="font-weight-light">Criado em: <span class="font-weight-bold">{{ dateAndHour($ticket->created_at) }}</span></small>
+                                        </p>
+                                        <p class="mb-0" style="line-height:1.1;">
+                                            <small class="font-weight-light">Última interação: <span class="font-weight-bold">{{ dateAndHour($ticket->updated_at) }}</span></small>
+                                        </p>
+                                    </td>
                                     <td>
                                         @include('tickets.inc.situation')
                                     </td>
                                     <td>
-                                        @if($ticket->owner->id !== auth()->id() && $ticket->interactions->first() !== null)
-                                            @include('tickets.inc.status')
-                                        @else
+                                        @if(count($ticket->respondents) === 0)
                                             <p class="mb-0">
                                                 <small>
                                                     <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
                                                 </small>
                                             </p>
+                                        @else
+                                            @include('tickets.inc.status')
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4">Nenhum chamado atribuído à você</td>
+                                    <td colspan="4">Nenhum chamado atribuído à você.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer">
+                    {{ auth()->user()->respondentTicketsWithPagination()->links() }}
                 </div>
             </div>
         </div>
