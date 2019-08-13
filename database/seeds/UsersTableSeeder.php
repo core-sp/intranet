@@ -26,5 +26,25 @@ class UsersTableSeeder extends Seeder
             'profile_id' => 2,
             'password' => 'anderson'
         ]);
+
+        User::create([
+            'name' => 'Edson Yassudi',
+            'email' => 'edson@core-sp.org.br',
+            'username' => 'edson',
+            'is_admin' => 1,
+            'is_coordinator' => 1,
+            'profile_id' => 1,
+            'password' => 'edson102030'
+        ]);
+
+        User::create([
+            'name' => 'Fernando',
+            'email' => 'fernando@core-sp.org.br',
+            'username' => 'fernando',
+            'is_admin' => 0,
+            'is_coordinator' => 1,
+            'profile_id' => 3,
+            'password' => 'fernando102030'
+        ]);
     }
 }

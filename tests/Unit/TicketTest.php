@@ -21,6 +21,8 @@ class TicketTest extends TestCase
     /** @test */
     function a_ticket_can_have_a_interaction()
     {
+        $this->signIn();
+
         $ticket = factory('App\Ticket')->create();
 
         factory('App\Interaction')->create([
@@ -37,6 +39,8 @@ class TicketTest extends TestCase
     /** @test */
     function a_ticket_may_have_multiple_interactions()
     {
+        $this->signIn();
+
         $ticket = factory('App\Ticket')->create();
 
         factory('App\Interaction', 2)->create([
@@ -57,26 +61,26 @@ class TicketTest extends TestCase
     }
 
     /** @test */
-    function a_ticket_may_have_one_respondent()
+    function a_ticket_can_have_one_respondent()
     {
-        $ticket = factory('App\Ticket')->create();
-
         $user = factory('App\User')->create();
 
-        $ticket->assignRespondents($user->id);
+        $ticket = factory('App\Ticket')->create(['profile_id' => $user->profile->id]);
 
-        $this->assertEquals(1, count($ticket->respondents));
+        $ticket->assignRespondent($user);
+
+        $this->assertEquals($user->name, $ticket->respondent->name);
     }
 
     /** @test */
-    function a_ticket_may_have_several_respondents()
+    function a_ticket_cannot_have_a_respondent_from_different_profile()
     {
+        $user = factory('App\User')->create();
+
         $ticket = factory('App\Ticket')->create();
-
-        $users = factory('App\User', 2)->create();
-
-        $ticket->assignRespondents($users);
         
-        $this->assertEquals(2, count($ticket->respondents));
+        $ticket->assignRespondent($user);
+
+        $this->assertDatabaseMissing('tickets', ['respondent_id' => $user->id]);
     }
 }

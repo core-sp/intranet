@@ -4,9 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use App\Traits\TicketUpdates;
 
 class Ticket extends Model
 {
+    use TicketUpdates;
+
     protected $guarded = [];
 
     public function user()
@@ -29,9 +32,9 @@ class Ticket extends Model
         return '/tickets/' . $this->id;
     }
 
-    public function respondents()
+    public function respondent()
     {
-        return $this->belongsToMany('App\User', 'ticket_respondents');
+        return $this->belongsTo('App\User');
     }
 
     public function interactions()
@@ -39,31 +42,20 @@ class Ticket extends Model
         return $this->hasMany('App\Interaction')->orderBy('created_at', 'DESC');
     }
 
-    public function addInteraction($attributes)
+    public function activities()
     {
-        $this->update(['status' => 'Em aberto']);
-        
-        return $this->interactions()->create($attributes);
-    }
-
-    public function changeStatus($string)
-    {
-        $this->update(['status' => $string]);
-    }
-
-    public function changeProfile($id)
-    {
-        $this->update(['profile_id' => $id]);
+        return $this->hasMany('App\Activity')->latest();
     }
 
     public function possibleRespondents()
     {
-        $except = $this->respondents->pluck('id')->toArray();
+        
+        isset($this->respondent->id) ? $respondentId = $this->respondent->id : $respondentId = 0;
 
         return \App\User::select('id', 'name')
+            ->where('id', '!=', $respondentId)
             ->where('profile_id', $this->profile->id)
-            ->get()
-            ->except($except);
+            ->get();
     }
 
     public function possibleProfiles()
@@ -71,12 +63,5 @@ class Ticket extends Model
         return \App\Profile::select('id', 'name')
             ->where('id', '!=', $this->profile->id)
             ->get();
-    }
-
-    public function assignRespondents($users)
-    {
-        $users instanceof Collection ?? $users = $users->pluck('id')->toArray();
-
-        return $this->respondents()->attach($users);
     }
 }

@@ -62,3 +62,22 @@ function changeStatusBtn($ticket)
         return false;
     }
 }
+
+function bgPriority($priority)
+{
+    switch ($priority) {
+        case 'Muito Baixa':
+        case 'Baixa':
+            return 'bg-baixa';
+        break;
+        
+        case 'Média':
+            return 'bg-media';
+        break;
+
+        case 'Alta':
+        case 'Muito Alta':
+            return 'bg-alta';
+        break;
+    }
+}

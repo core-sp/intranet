@@ -99,3 +99,27 @@ label {
 .pagination {
     margin-bottom: 0px;
 }
+
+.list-activities {
+    margin: 0px;
+    padding: 0px;
+    list-style-position: inside;
+}
+
+.list-activities li {
+    font-size: 14px;
+    line-height: 1.4;
+    padding-bottom: 8px;
+}
+
+.bg-baixa {
+    background-color: #ffe0e0;
+}
+
+.bg-media {
+    background-color: #ffcece;
+}
+
+.bg-alta {
+    background-color: #ffbfbf;
+}

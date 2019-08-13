@@ -13,5 +13,9 @@ class ProfilesTableSeeder extends Seeder
         $profile = new App\Profile();
         $profile->name = 'Atendimento';
         $profile->save();
+
+        $profile = new App\Profile();
+        $profile->name = 'Financeiro';
+        $profile->save();
     }
 }

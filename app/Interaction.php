@@ -18,4 +18,11 @@ class Interaction extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function recordActivity($message)
+    {
+        $this->ticket->activities()->create([
+            'description' => $message
+        ]);
+    }
 }

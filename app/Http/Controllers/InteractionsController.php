@@ -18,7 +18,7 @@ class InteractionsController extends Controller
         return request()->validate([
             'user_id' => 'required',
             'ticket_id' => 'required',
-            'content' => 'required|min:10'
+            'content' => 'required'
         ]);
     }
 
@@ -26,7 +26,7 @@ class InteractionsController extends Controller
     {
         if($ticket->status === 'Concluído')
             abort(403);
-
+    
         $this->authorize('interact', $ticket);
 
         $ticket->addInteraction($this->validateRequest());

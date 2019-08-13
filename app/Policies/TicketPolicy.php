@@ -17,7 +17,7 @@ class TicketPolicy
 
     public function interact(User $user, Ticket $ticket)
     {
-        return $user->is($ticket->owner) || $ticket->respondents->contains($user->id);
+        return $user->is($ticket->owner) || $user->isRespondent($ticket);
     }
 
     public function close(User $user, Ticket $ticket)
@@ -27,11 +27,11 @@ class TicketPolicy
 
     public function finish(User $user, Ticket $ticket)
     {
-        return $ticket->respondents->contains($user->id);
+        return $user->isRespondent($ticket);
     }
 
     public function assign(User $user, Ticket $ticket)
     {
-        return $user->hasSameTicketProfile($ticket);
+        return $user->hasSameTicketProfile($ticket) && $ticket->status !== 'Concluído';
     }
 }

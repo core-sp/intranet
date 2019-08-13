@@ -13,7 +13,7 @@ $factory->define(Ticket::class, function (Faker $faker) {
         'priority' => 'Média',
         'content' => $faker->paragraph,
         'status' => 'Em aberto',
-        //'respondent_id' => factory('App\User'),
+        'respondent_id' => factory('App\User'),
         'created_at' => now(),
         'updated_at' => now()
     ];

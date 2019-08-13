@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class TicketRespondents extends Migration
+class CreateActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class TicketRespondents extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_respondents', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('ticket_id');
-            $table->unsignedBigInteger('user_id');
+            $table->string('description');
             $table->timestamps();
 
-            $table->index(['ticket_id', 'user_id']);
+            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ class TicketRespondents extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('activities');
     }
 }

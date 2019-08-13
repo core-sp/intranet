@@ -14,18 +14,25 @@
 <div class="container">
     <form action="/profiles" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="name">Nome</label>
-            <input
-                type="text"
-                id="name"
-                name="name"
-                class="form-control"
-                placeholder="Nome do perfil"
-            >
-        </div>
-        <div class="form-group text-right">
-            <button type="submit" class="btn btn-primary">Salvar</button>
+        <div class="card">
+            <h5 class="card-header">
+                Criar Perfil
+            </h5>
+            <div class="card-body">
+                <div class="form-group mb-0">
+                    <label for="name">Nome</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="form-control"
+                        placeholder="Nome do perfil"
+                    >
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
         </div>
     </form>
 </div>

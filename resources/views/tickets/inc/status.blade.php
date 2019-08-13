@@ -1,21 +1,13 @@
-@if(auth()->user()->is($ticket->owner))
+@if(count($ticket->interactions) > 0 && $ticket->interactions->first()->user->id !== auth()->id())
     <p class="mb-0">
         <small>
-            @if($ticket->interactions->isEmpty() || $ticket->interactions->first()->user_id == auth()->id())
-                <i class="fas fa-circle"></i> AGUARDANDO INTERAÇÃO
-            @else
-                <span class="text-danger font-weight-bold"><i class="fas fa-exclamation-circle"></i> NECESSITA INTERAÇÃO</span>
-            @endif
+            <span class="text-danger font-weight-bold"><i class="fas fa-exclamation-circle"></i> NECESSITA INTERAÇÃO</span>
         </small>
     </p>
 @else
     <p class="mb-0">
         <small>
-            @if($ticket->interactions->isEmpty() || $ticket->interactions->first()->user_id == $ticket->owner->id)
-                <span class="text-danger font-weight-bold"><i class="fas fa-exclamation-circle"></i> NECESSITA INTERAÇÃO</span>
-            @else
-                <i class="fas fa-circle"></i> AGUARDANDO INTERAÇÃO
-            @endif
+            <i class="fas fa-circle"></i> AGUARDANDO INTERAÇÃO
         </small>
     </p>
 @endif

@@ -14,11 +14,14 @@
     <div class="row mb-3">
         <div class="col">
             <a href="/tickets/created" class="btn btn-secondary">Meus Chamados</a>
+            <a href="/tickets/completed" class="btn btn-dark">Chamados Concluídos</a>
+        </div>
+        <div class="col text-right">
             <a href="/tickets/create" class="btn btn-primary">Novo Chamado</a>
         </div>
     </div>
     <div class="row mb-4">
-        <div class="col-4" style="padding-left:7.5px;padding-right:7.5px;">
+        <div class="col-3" style="padding-left:7.5px;padding-right:7.5px;">
             <div class="card">
                 <h5 class="card-header">
                     Chamados do {{ auth()->user()->profile->name }}
@@ -27,7 +30,9 @@
                     @forelse(auth()->user()->ticketsFromProfile() as $ticket)
                         <h6 class="mb-2"><a href="{{ $ticket->path() }}"><strong>#{{ $ticket->id }} - {{ $ticket->title }}</strong></a></h6>
                         <p class="mb-0" style="line-height:1.1;">
-                            <small class="font-weight-light">Emitido por: <span class="font-weight-bold">{{ $ticket->user->name }} ({{ $ticket->user->profile->name }})</span></small>
+                            <small class="font-weight-light">
+                                Emitido por: <span class="font-weight-bold">{{ $ticket->user->name }} ({{ $ticket->user->profile->name }})</span>
+                            </small>
                         </p>
                         <p class="mb-0" style="line-height:1.1;">
                             <small class="font-weight-light">Criado em: <span class="font-weight-bold">{{ onlyDate($ticket->created_at) }}</span></small>
@@ -35,7 +40,7 @@
                         <p class="mb-0" style="line-height:1.1;">
                             <small class="font-weight-light">Última interação: <span class="font-weight-bold">{{ onlyDate($ticket->updated_at) }}</span></small>
                         </p>
-                        @if(count($ticket->respondents) === 0)
+                        @if($ticket->respondent === null)
                             <p class="mb-0" style="line-height:1.1;">
                                 <small class="font-weight-bold text-danger"><i class="fas fa-exclamation-circle"></i> NECESSITA ATRIBUIÇÃO</small>
                             </p>
@@ -60,12 +65,13 @@
                             <tr>
                                 <th>#</th>
                                 <th>Título</th>
+                                <th>Prioridade</th>
                                 <th>Situação</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse(auth()->user()->respondentTicketsWithPagination() as $ticket)
+                            @forelse($pagination = auth()->user()->respondentTicketsWithPagination() as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
                                     <td>
@@ -77,18 +83,27 @@
                                             <small class="font-weight-light">Última interação: <span class="font-weight-bold">{{ dateAndHour($ticket->updated_at) }}</span></small>
                                         </p>
                                     </td>
+                                    <td class="{{ bgPriority($ticket->priority) }}">{{ $ticket->priority }}</td>
                                     <td>
                                         @include('tickets.inc.situation')
                                     </td>
                                     <td>
-                                        @if(count($ticket->respondents) === 0)
-                                            <p class="mb-0">
+                                        @if($ticket->status === 'Concluído')
+                                            <p class="mb-0 text-muted">
                                                 <small>
-                                                    <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
+                                                    <i class="far fa-check-square"></i> CONCLUÍDO
                                                 </small>
                                             </p>
                                         @else
-                                            @include('tickets.inc.status')
+                                            @if(!isset($ticket->respondent))
+                                                <p class="mb-0">
+                                                    <small>
+                                                        <i class="far fa-circle"></i> AGUARDANDO ATRIBUIÇÃO
+                                                    </small>
+                                                </p>
+                                            @else
+                                                @include('tickets.inc.status')
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
@@ -101,7 +116,7 @@
                     </table>
                 </div>
                 <div class="card-footer">
-                    {{ auth()->user()->respondentTicketsWithPagination()->links() }}
+                    {{ $pagination->links() }}
                 </div>
             </div>
         </div>

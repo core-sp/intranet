@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function respondentTickets()
     {
-        return $this->belongsToMany('App\Ticket', 'ticket_respondents');
+        return $this->hasMany('App\Ticket', 'respondent_id')->latest();
     }
 
     public function respondentTicketsWithPagination()
@@ -50,7 +50,10 @@ class User extends Authenticatable
 
     public function ticketsFromProfile()
     {
-        return Ticket::where('profile_id', $this->profile->id)->take(20)->get();
+        return Ticket::where('profile_id', $this->profile->id)
+            ->where('status', '!=', 'Concluído')
+            ->take(20)
+            ->get();
     }
 
     public function isAdmin()
@@ -61,6 +64,11 @@ class User extends Authenticatable
     public function isCoordinator()
     {
         return auth()->user()->is_coordinator === true ? true : false;
+    }
+
+    public function isRespondent($ticket)
+    {
+        return $ticket->respondent !== null && $this->id === $ticket->respondent->id ? true : false;
     }
 
     public function hasSameTicketProfile($ticket)

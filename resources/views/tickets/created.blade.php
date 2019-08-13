@@ -15,6 +15,8 @@
     <div class="row mb-3">
         <div class="col">
             <a href="/tickets" class="btn btn-secondary">Lista de Chamados</a>
+        </div>
+        <div class="col text-right">
             <a href="/tickets/create" class="btn btn-primary">Novo Chamado</a>
         </div>
     </div>
@@ -31,6 +33,7 @@
                                 <th>#</th>
                                 <th>Título</th>
                                 <th>Área requisitada</th>
+                                <th>Prioridade</th>
                                 <th>Situação</th>
                                 <th>Status</th>
                             </tr>
@@ -41,24 +44,33 @@
                                     <td>{{ $ticket->id }}</td>
                                     <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
                                     <td>{{ $ticket->profile->name }}</td>
+                                    <td>{{ $ticket->priority }}</td>
                                     <td>
                                         @include('tickets.inc.situation')
                                     </td>
                                     <td>
-                                        @if(count($ticket->respondents) === 0)
-                                            <p class="mb-0">
+                                        @if($ticket->status === 'Concluído')
+                                            <p class="mb-0 text-muted">
                                                 <small>
-                                                    <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
+                                                    <i class="far fa-check-square"></i> CONCLUÍDO
                                                 </small>
                                             </p>
                                         @else
-                                            @include('tickets.inc.status')
+                                            @if(!count($ticket->interactions))
+                                                <p class="mb-0">
+                                                    <small>
+                                                        <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
+                                                    </small>
+                                                </p>
+                                            @else
+                                                @include('tickets.inc.status')
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4">Nenhum chamado criado ainda.</td>
+                                    <td colspan="5">Nenhum chamado criado ainda.</td>
                                 </tr>
                             @endforelse
                         </tbody>

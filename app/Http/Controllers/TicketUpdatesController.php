@@ -20,7 +20,9 @@ class TicketUpdatesController extends Controller
     {
         $this->authorize('view', $ticket);
 
-        $ticket->assignRespondents(request('user_id'));
+        $ticket->status === 'Concluído' ? abort(403) : true;
+
+        $ticket->assignRespondentById(request('respondent_id'));
 
         return $this->redirect($ticket->path(), 'Usuário atribuído ao chamado com sucesso', 'alert-success');
     }
@@ -42,9 +44,9 @@ class TicketUpdatesController extends Controller
     {
         $this->authorize('interact', $ticket);
 
-        auth()->user()->is($ticket->owner) && request('status') === 'Encerrado' ?? abort(403);
+        auth()->user()->is($ticket->owner) ?? $this->authorize('close', $ticket);
         
-        auth()->user()->is($ticket->respondent) && !auth()->user()->is($ticket->owner) && request('status') === 'Concluído' ?? abort(403);
+        auth()->user()->is($ticket->respondent) ?? $this->authorize('finish', $ticket);
     }
 
     protected function redirect($path, $message, $class)
