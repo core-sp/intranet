@@ -108,7 +108,10 @@
                 <div class="card-body">
                     <ul class="list-activities">
                         @foreach ($ticket->activities as $activity)
-                            <li class="{{ $loop->last ? 'pb-0' : '' }}">{!! $activity->description !!}</li>
+                            <li class="{{ $loop->last ? 'pb-0' : '' }}">
+                                {!! $activity->description !!}
+                                <small class="text-muted">{{ dateAndHour($activity->created_at) }}</small>
+                            </li>
                         @endforeach
                     </ul>
                 </div>

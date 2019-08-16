@@ -39,4 +39,11 @@ class ProfilesController extends Controller
             'class' => 'alert-success'
         ]);
     }
+
+    public function ticketsCompleted(Profile $profile)
+    {
+        $this->authorize('completedTickets', $profile);
+
+        return view('profiles.tickets-completed', compact('profile'));
+    }
 }

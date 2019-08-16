@@ -12,4 +12,19 @@ class Profile extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    public function path()
+    {
+        return '/profiles/' . $this->id;
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído');
+    }
+
+    public function completedTickets()
+    {
+        return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->paginate(10);
+    }
 }

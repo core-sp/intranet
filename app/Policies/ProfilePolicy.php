@@ -14,4 +14,9 @@ class ProfilePolicy
     {
         return $user->isAdmin();
     }
+
+    public function completedTickets(User $user, Profile $profile)
+    {
+        return $user->profile_id === $profile->id;
+    }
 }

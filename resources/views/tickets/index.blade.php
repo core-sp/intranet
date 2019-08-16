@@ -14,7 +14,7 @@
     <div class="row mb-3">
         <div class="col">
             <a href="/tickets/created" class="btn btn-secondary">Meus Chamados</a>
-            <a href="/tickets/completed" class="btn btn-dark">Chamados Concluídos</a>
+            <a href="{{ auth()->user()->profile->path() . '/tickets-completed' }}" class="btn btn-dark">Chamados Concluídos do {{ auth()->user()->profile->name }}</a>
         </div>
         <div class="col text-right">
             <a href="/tickets/create" class="btn btn-primary">Novo Chamado</a>
@@ -24,10 +24,10 @@
         <div class="col-3" style="padding-left:7.5px;padding-right:7.5px;">
             <div class="card">
                 <h5 class="card-header">
-                    Chamados do {{ auth()->user()->profile->name }}
+                    Chamados abertos do {{ auth()->user()->profile->name }}
                 </h5>
                 <div class="card-body">
-                    @forelse(auth()->user()->ticketsFromProfile() as $ticket)
+                    @forelse(auth()->user()->profile->tickets as $ticket)
                         <h6 class="mb-2"><a href="{{ $ticket->path() }}"><strong>#{{ $ticket->id }} - {{ $ticket->title }}</strong></a></h6>
                         <p class="mb-0" style="line-height:1.1;">
                             <small class="font-weight-light">
@@ -35,10 +35,10 @@
                             </small>
                         </p>
                         <p class="mb-0" style="line-height:1.1;">
-                            <small class="font-weight-light">Criado em: <span class="font-weight-bold">{{ onlyDate($ticket->created_at) }}</span></small>
+                            <small class="font-weight-light">Criado em: <span class="font-weight-bold text-muted">{{ onlyDate($ticket->created_at) }}</span></small>
                         </p>
                         <p class="mb-0" style="line-height:1.1;">
-                            <small class="font-weight-light">Última interação: <span class="font-weight-bold">{{ onlyDate($ticket->updated_at) }}</span></small>
+                            <small class="font-weight-light">Última interação: <span class="font-weight-bold text-muted">{{ onlyDate($ticket->updated_at) }}</span></small>
                         </p>
                         @if($ticket->respondent === null)
                             <p class="mb-0" style="line-height:1.1;">
@@ -77,10 +77,10 @@
                                     <td>
                                         <a href="{{ $ticket->path() }}">{{ $ticket->title }}</a>
                                         <p class="mb-0" style="line-height:1.1;">
-                                            <small class="font-weight-light">Criado em: <span class="font-weight-bold">{{ dateAndHour($ticket->created_at) }}</span></small>
+                                            <small class="font-weight-light">Criado em: <span class="font-weight-bold text-muted">{{ dateAndHour($ticket->created_at) }}</span></small>
                                         </p>
                                         <p class="mb-0" style="line-height:1.1;">
-                                            <small class="font-weight-light">Última interação: <span class="font-weight-bold">{{ dateAndHour($ticket->updated_at) }}</span></small>
+                                            <small class="font-weight-light">Última interação: <span class="font-weight-bold text-muted">{{ dateAndHour($ticket->updated_at) }}</span></small>
                                         </p>
                                     </td>
                                     <td class="{{ bgPriority($ticket->priority) }}">{{ $ticket->priority }}</td>

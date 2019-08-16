@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function respondentTicketsWithPagination()
     {
-        return $this->respondentTickets()->paginate(20);
+        return $this->respondentTickets()->where('status', '!=', 'Concluído')->paginate(20);
     }
 
     public function ticketsFromProfile()

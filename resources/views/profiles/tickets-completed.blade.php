@@ -32,45 +32,23 @@
                             <tr>
                                 <th>#</th>
                                 <th>Título</th>
-                                <th>Área requisitada</th>
                                 <th>Prioridade</th>
-                                <th>Situação</th>
-                                <th>Status</th>
+                                <th>Concluído por:</th>
+                                <th>Data de conclusão</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($pagination = auth()->user()->tickets()->paginate(10) as $ticket)
+                            @forelse($pagination = $profile->completedTickets() as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
                                     <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
-                                    <td>{{ $ticket->profile->name }}</td>
                                     <td class="{{ bgPriority($ticket->priority) }}">{{ $ticket->priority }}</td>
-                                    <td>
-                                        @include('tickets.inc.situation')
-                                    </td>
-                                    <td>
-                                        @if($ticket->status === 'Concluído')
-                                            <p class="mb-0 text-muted">
-                                                <small>
-                                                    <i class="far fa-check-square"></i> CONCLUÍDO
-                                                </small>
-                                            </p>
-                                        @else
-                                            @if(!count($ticket->interactions))
-                                                <p class="mb-0">
-                                                    <small>
-                                                        <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
-                                                    </small>
-                                                </p>
-                                            @else
-                                                @include('tickets.inc.status')
-                                            @endif
-                                        @endif
-                                    </td>
+                                    <td>{{ $ticket->respondent->name }}</td>
+                                    <td><strong class="text-muted">{{ dateAndHour($ticket->updated_at) }}</strong></td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5">Nenhum chamado criado ainda.</td>
+                                    <td colspan="5">Nenhum chamado concluído ainda.</td>
                                 </tr>
                             @endforelse
                         </tbody>

@@ -49,4 +49,24 @@ class ProfilesTest extends TestCase
             'name' => 'Teste'
         ]);
     }
+
+    /** @test */
+    function a_user_can_see_completed_ticket_from_their_profile()
+    {
+        $this->withoutExceptionHandling();
+
+        $john = $this->signIn();
+
+        $profile = $john->profile;
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $profile->id,
+            'status' => 'Concluído'
+        ]);
+
+        $this
+            ->get($profile->path() . '/tickets-completed')
+            ->assertOk()
+            ->assertSee($ticket->title);
+    }
 }
