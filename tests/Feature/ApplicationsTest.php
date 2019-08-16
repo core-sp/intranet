@@ -11,12 +11,6 @@ class GeneralsTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function simple_test()
-    {
-        $this->get('/')->assertOk();
-    }
-
-    /** @test */
     function guests_cannot_see_the_homepage()
     {
         $this->get('/')->assertRedirect('login');
