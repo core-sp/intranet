@@ -13,7 +13,6 @@ class GeneralsTest extends TestCase
     /** @test */
     function simple_test()
     {
-        dd(app()->env);
         $this->get('/')->assertOk();
     }
 
