@@ -109,7 +109,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4">Nenhum chamado atribuído à você.</td>
+                                    <td colspan="5">Nenhum chamado atribuído à você.</td>
                                 </tr>
                             @endforelse
                         </tbody>

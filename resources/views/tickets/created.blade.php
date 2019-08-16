@@ -70,7 +70,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5">Nenhum chamado criado ainda.</td>
+                                    <td colspan="6">Nenhum chamado criado ainda.</td>
                                 </tr>
                             @endforelse
                         </tbody>
