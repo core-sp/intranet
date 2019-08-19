@@ -37,9 +37,9 @@
                 <textarea
                     name="content"
                     id="content"
-                    rows="10"
+                    rows="15"
                     placeholder="Conteúdo do chamado"
-                    class="form-control"
+                    class="form-control textarea-content"
                 ></textarea>
             </div>
         </div>  

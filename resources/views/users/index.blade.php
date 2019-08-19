@@ -39,10 +39,10 @@
                                     <td>
                                         {{ $user->name }} {!! $user->is_admin ? '<small><strong>Administrador</strong></small>' : '' !!}
                                     </td>
-                                    <td>{{ $user->profile->name }} {!! $user->is_coordinator ? '<small><i>(Coordenador)</i></small>' : '' !!}</td>
+                                    <td>{{ isset($user->profile) ? $user->profile->name : 'Sem Perfil' }} {!! $user->is_coordinator ? '<small><i>(Coordenador)</i></small>' : '' !!}</td>
                                     <td>
                                         <a href="{{ $user->path() . '/edit' }}" class="btn btn-sm btn-primary">Editar</a>
-                                        <form action="/users/{{ $user->id }}" method="POST">
+                                        <form action="/users/{{ $user->id }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <input type="submit" class="btn btn-sm btn-danger any-delete-button" value="Deletar" />

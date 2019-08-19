@@ -81,7 +81,7 @@ class ProfilesTest extends TestCase
 
         $this->delete($profile->path());
 
-        $this->assertDatabaseMissing('profiles', ['id' => $profile->id]);
+        $this->assertNotNull($profile->fresh()->deleted_at);
     }
 
     /** @test */

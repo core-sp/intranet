@@ -191,7 +191,7 @@ class UsersTest extends TestCase
 
         $this->delete('/users/' . $user->id);
 
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertNotNull($user->fresh()->deleted_at);
     }
 
     /** @test */

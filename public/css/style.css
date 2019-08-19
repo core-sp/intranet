@@ -62,12 +62,21 @@ label {
 .direct-chat-text {
     border-radius: 0.3rem;
     position: relative;
-    padding: 10px 20px;
+    padding: 15px 20px;
     background: #d2d6de;
     border: 1px solid #d2d6de;
     margin: 5px 0 0 144px;
     color: #444;
     display: block;
+}
+
+.direct-chat-text p {
+    margin-bottom: .5rem;
+    line-height: 1.4;
+}
+
+.direct-chat-text p:last-child {
+    margin-bottom: 0px;
 }
 
 .direct-chat-text:after,

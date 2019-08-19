@@ -8,9 +8,9 @@ class TicketObserver
 {
     public function created(Ticket $ticket)
     {
-        isset(auth()->user()->name) ? $username = auth()->user()->name : $username = 'Intranet';
+        $ticket->recordActivity('<strong>' . $ticket->owner->name . '</strong> definiu como <i>' . $ticket->priority . '</i> a prioridade deste chamado');
 
-        $ticket->recordActivity('<strong>' . $username . '</strong> criou o chamado <i>"' . $ticket->title . '"</i>');
+        $ticket->recordActivity('<strong>' . $ticket->owner->name . '</strong> criou o chamado <i>"' . $ticket->title . '"</i>');
     }
 
     public function updated(Ticket $ticket)

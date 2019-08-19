@@ -19,10 +19,13 @@ class ActivitiesTest extends TestCase
 
         $ticket = \App\Ticket::first();
 
-        $this->assertEquals(1, $ticket->activities()->count());
+        $this->assertEquals(2, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $user->name . '</strong> criou o chamado <i>"' . $ticket->title . '"</i>'
+        ])->assertDatabaseHas('activities', [
+            'ticket_id' => $ticket->id,
+            'description' => '<strong>' . $user->name . '</strong> definiu como <i>' . $ticket->priority . '</i> a prioridade deste chamado'
         ]);
     }
 
@@ -39,7 +42,7 @@ class ActivitiesTest extends TestCase
 
         $this->patch($ticket->path() . '/update-respondent', ['respondent_id' => $jane->id]);
 
-        $this->assertEquals(2, $ticket->activities()->count());
+        $this->assertEquals(3, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> atribuiu <i>' . $jane->name . '</i> ao chamado'
@@ -59,7 +62,7 @@ class ActivitiesTest extends TestCase
 
         $this->patch($ticket->path() . '/update-profile', ['profile_id' => $profile->id]);
 
-        $this->assertEquals(2, $ticket->activities()->count());
+        $this->assertEquals(3, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> atribuiu o chamado à área: <i>' . $profile->name . '</i>'
@@ -78,7 +81,7 @@ class ActivitiesTest extends TestCase
 
         $this->patch($ticket->path() . '/update-status', ['status' => 'Encerrado']);
 
-        $this->assertEquals(2, $ticket->activities()->count());
+        $this->assertEquals(3, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> marcou o chamado como <i>' . $ticket->fresh()->status . '</i>'
@@ -96,7 +99,7 @@ class ActivitiesTest extends TestCase
 
         $this->patch($ticket->path() . '/update-status', ['status' => 'Concluído']);
 
-        $this->assertEquals(2, $ticket->activities()->count());
+        $this->assertEquals(3, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> marcou o chamado como <i>' . $ticket->fresh()->status . '</i>'
@@ -119,7 +122,7 @@ class ActivitiesTest extends TestCase
 
         $this->post($ticket->path() . '/interactions', $attributes);
 
-        $this->assertEquals(2, $ticket->activities()->count());
+        $this->assertEquals(3, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> adicionou uma interação à este chamado'

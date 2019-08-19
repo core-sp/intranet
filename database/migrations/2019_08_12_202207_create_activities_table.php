@@ -19,7 +19,7 @@ class CreateActivitiesTable extends Migration
             $table->string('description');
             $table->timestamps();
 
-            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
+            $table->foreign('ticket_id')->references('id')->on('tickets');
         });
     }
 

@@ -13,9 +13,14 @@ class TicketTest extends TestCase
     /** @test */
     function a_ticket_can_be_created()
     {
+        $this->withoutExceptionHandling();
+
         $ticket = factory('App\Ticket')->create();
 
-        $this->assertDatabaseHas('tickets', $ticket->toArray());
+        $this->assertDatabaseHas('tickets', [
+            'id' => $ticket->id,
+            'title' => $ticket->title
+        ]);
     }
 
     /** @test */

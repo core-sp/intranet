@@ -45,9 +45,9 @@
                             <textarea
                                 name="content"
                                 id="content"
-                                rows="5"
+                                rows="20"
                                 placeholder="Descrição"
-                                class="form-control"
+                                class="form-control textarea-content"
                             ></textarea>
                         </div>
                         <div class="form-group mb-0 text-right">
@@ -77,8 +77,7 @@
                                     <p class="m-0"><strong>({{ $interaction->user->name }} - {{ $interaction->user->profile->name }})</strong></p>
                                 </div>
                                 <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info' : '' }}">
-                                    <h5 class="mt-2">{{ $interaction->title }}</h5>
-                                    <p class="mt-2 mb-2">{{ $interaction->content }}</p>
+                                    {!! $interaction->content !!}
                                 </div>
                             </div>
                         </div>
@@ -92,8 +91,8 @@
                                 <p class="m-0"><strong>({{ $ticket->user->name }} - {{ $ticket->user->profile->name }})</strong></p>
                             </div>
                             <div class="direct-chat-text">
-                                <h5 class="mt-2">{{ $ticket->title }}</h5>
-                                <p class="mt-2 mb-2">{{ $ticket->content }}</p>
+                                <h5>{{ $ticket->title }}</h5>
+                                {!! $ticket->content !!}
                             </div>
                         </div>
                     </div>
