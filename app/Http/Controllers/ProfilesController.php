@@ -40,6 +40,18 @@ class ProfilesController extends Controller
         ]);
     }
 
+    public function destroy(Profile $profile)
+    {
+        $this->authorize('create', $profile);
+
+        $profile->delete();
+
+        return redirect('/profiles')->with([
+            'message' => 'Perfil deletado com sucesso',
+            'class' => 'alert-success'
+        ]);
+    }
+
     public function ticketsCompleted(Profile $profile)
     {
         $this->authorize('completedTickets', $profile);

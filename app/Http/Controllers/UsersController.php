@@ -108,4 +108,16 @@ class UsersController extends Controller
             'class' => 'alert-success'
         ]);
     }
+
+    public function destroy(User $user)
+    {
+        $this->authorize('view', $user);
+
+        $user->delete();
+
+        return redirect('/')->with([
+            'message' => 'Usuário deletado com sucesso',
+            'class' => 'alert-success'
+        ]);
+    }
 }

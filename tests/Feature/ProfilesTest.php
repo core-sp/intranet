@@ -69,4 +69,34 @@ class ProfilesTest extends TestCase
             ->assertOk()
             ->assertSee($ticket->title);
     }
+
+    /** @test */
+    function an_admin_can_delete_a_profile()
+    {
+        $this->signInAsAdmin();
+
+        $profile = factory('App\Profile')->create();
+
+        $this->assertDatabaseHas('profiles', ['id' => $profile->id]);
+
+        $this->delete($profile->path());
+
+        $this->assertDatabaseMissing('profiles', ['id' => $profile->id]);
+    }
+
+    /** @test */
+    function non_admins_cannot_delete_a_profile()
+    {
+        $this->signInAsAdmin();
+
+        $profile = factory('App\Profile')->create();
+
+        $this->assertDatabaseHas('profiles', ['id' => $profile->id]);
+
+        $this->signIn();
+
+        $this->delete($profile->path())->assertStatus(403);
+
+        $this->assertDatabaseHas('profiles', ['id' => $profile->id]);
+    }
 }

@@ -94,6 +94,6 @@
     </div>
     <div class="card-footer text-right">
         <a href="/users" class="btn btn-secondary">Cancelar</a>
-        <button type="submit" class="btn btn-primary">Salvar</button>
+        <button type="submit" class="btn btn-primary any-submit-button"><i class="spinner fa fa-spinner fa-spin"></i> Salvar</button>
     </div>
 </div>

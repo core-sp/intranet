@@ -19,12 +19,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/users', 'UsersController@store');
     Route::get('/users/{user}/edit', 'UsersController@edit');
     Route::patch('/users/{user}', 'UsersController@update');
+    Route::delete('/users/{user}', 'UsersController@destroy');
     Route::get('/users/{user}/change-password', 'UsersController@changePasswordView');
     Route::patch('/users/{user}/change-password', 'UsersController@changePassword');
     // Profiles
     Route::get('/profiles', 'ProfilesController@index');
     Route::get('/profiles/create', 'ProfilesController@create');
     Route::post('/profiles', 'ProfilesController@store');
+    Route::delete('/profiles/{profile}', 'ProfilesController@destroy');
     Route::get('/profiles/{profile}/tickets-completed', 'ProfilesController@ticketsCompleted');
     // Tickets
     Route::get('/tickets', 'TicketsController@index');

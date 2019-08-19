@@ -13,7 +13,7 @@
 </div>
 @include('errors')
 <div class="container">
-    <form action="/users" method="POST">
+    <form action="/users" method="POST" class="any-form">
         @include('users.form', [
             'user' => new App\User,
             'title' => 'Criar Usuário',

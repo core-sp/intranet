@@ -12,7 +12,7 @@
     </nav>
 </div>
 <div class="container">
-    <form action="/tickets" method="POST">
+    <form action="/tickets" method="POST" class="any-form">
         @csrf
         @include('tickets.form', [
             'title' => 'Criar Chamado'

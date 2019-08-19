@@ -20,7 +20,7 @@ class Profile extends Model
 
     public function tickets()
     {
-        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído');
+        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído')->latest();
     }
 
     public function completedTickets()

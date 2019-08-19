@@ -40,7 +40,14 @@
                                         {{ $user->name }} {!! $user->is_admin ? '<small><strong>Administrador</strong></small>' : '' !!}
                                     </td>
                                     <td>{{ $user->profile->name }} {!! $user->is_coordinator ? '<small><i>(Coordenador)</i></small>' : '' !!}</td>
-                                    <td><a href="{{ $user->path() . '/edit' }}" class="btn btn-sm btn-primary">Editar</a></td>
+                                    <td>
+                                        <a href="{{ $user->path() . '/edit' }}" class="btn btn-sm btn-primary">Editar</a>
+                                        <form action="/users/{{ $user->id }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" class="btn btn-sm btn-danger any-delete-button" value="Deletar" />
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

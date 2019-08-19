@@ -123,3 +123,7 @@ label {
 .bg-alta {
     background-color: #ffbfbf;
 }
+
+.spinner {
+    display: none;
+}

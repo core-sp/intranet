@@ -179,4 +179,34 @@ class UsersTest extends TestCase
 
         $this->assertTrue(Hash::check('NovaSenha102030@', $user->fresh()->password));
     }
+
+    /** @test */
+    function an_admin_can_delete_a_user()
+    {
+        $this->signInAsAdmin();
+
+        $user = factory('App\User')->create();
+
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
+
+        $this->delete('/users/' . $user->id);
+
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    /** @test */
+    function non_admins_cannot_delete_a_user()
+    {
+        $this->signInAsAdmin();
+
+        $user = factory('App\User')->create();
+
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
+
+        $this->signIn();
+
+        $this->delete('/users/' . $user->id)->assertStatus(403);
+
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
+    }
 }

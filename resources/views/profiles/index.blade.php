@@ -29,6 +29,7 @@
                                 <th>Código</th>
                                 <th>Nome</th>
                                 <th>Nº de usuários</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,6 +38,13 @@
                                     <td>{{ $profile->id }}</td>
                                     <td>{{ $profile->name }}</td>
                                     <td>{{ count($profile->users) }}</td>
+                                    <td>
+                                        <form action="{{ $profile->path() }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" class="btn btn-sm btn-danger any-delete-button" value="Deletar" />
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

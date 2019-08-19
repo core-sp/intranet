@@ -23,21 +23,21 @@
                 Responder
             </a>
             @if(changeStatusBtn($ticket))
-            <form action="{{ $ticket->path() . '/update-status' }}" method="POST" class="d-inline">
+            <form action="{{ $ticket->path() . '/update-status' }}" method="POST" class="d-inline any-form">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="status" value="{{ changeStatusBtn($ticket)['value'] }}">
                 <button 
                     type="submit"
-                    class="btn {{ changeStatusBtn($ticket)['class'] }}"
+                    class="btn {{ changeStatusBtn($ticket)['class'] }} any-submit-button"
                 >
-                    {{ changeStatusBtn($ticket)['text'] }}
+                    <i class="spinner fa fa-spinner fa-spin"></i> {{ changeStatusBtn($ticket)['text'] }}
                 </button>
             </form>
             @endif
             <div class="collapse mt-2" id="collapse-interaction">
                 <div class="card card-body">
-                    <form action="{{ $ticket->path() . '/interactions' }}" method="POST">
+                    <form action="{{ $ticket->path() . '/interactions' }}" method="POST" class="any-form">
                         @csrf
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                         <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
@@ -51,7 +51,7 @@
                             ></textarea>
                         </div>
                         <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-primary">Responder</button>
+                            <button type="submit" class="btn btn-primary any-submit-button"><i class="spinner fa fa-spinner fa-spin"></i> Responder</button>
                         </div>
                     </form>
                 </div>

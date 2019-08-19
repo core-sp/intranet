@@ -12,7 +12,7 @@
     </nav>
 </div>
 <div class="container">
-    <form action="/profiles" method="POST">
+    <form action="/profiles" method="POST" class="any-form">
         @csrf
         <div class="card">
             <h5 class="card-header">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="card-footer text-right">
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="submit" class="btn btn-primary any-submit-button"><i class="spinner fa fa-spinner fa-spin"></i> Salvar</button>
             </div>
         </div>
     </form>
