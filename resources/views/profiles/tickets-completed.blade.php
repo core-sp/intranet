@@ -2,6 +2,8 @@
 
 @section('content')
 
+{{ dd(now()) }}
+
 <div class="container mb-3">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
