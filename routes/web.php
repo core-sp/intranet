@@ -14,19 +14,11 @@
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/', 'HomeController@index');
     // Users
-    Route::get('/users', 'UsersController@index');
-    Route::get('/users/create', 'UsersController@create');
-    Route::post('/users', 'UsersController@store');
-    Route::get('/users/{user}/edit', 'UsersController@edit');
-    Route::patch('/users/{user}', 'UsersController@update');
-    Route::delete('/users/{user}', 'UsersController@destroy');
+    Route::resource('/users', 'UsersController')->except(['show']);
     Route::get('/users/{user}/change-password', 'UsersController@changePasswordView');
     Route::patch('/users/{user}/change-password', 'UsersController@changePassword');
     // Profiles
-    Route::get('/profiles', 'ProfilesController@index');
-    Route::get('/profiles/create', 'ProfilesController@create');
-    Route::post('/profiles', 'ProfilesController@store');
-    Route::delete('/profiles/{profile}', 'ProfilesController@destroy');
+    Route::resource('/profiles', 'ProfilesController')->except(['show', 'edit', 'update']);
     Route::get('/profiles/{profile}/tickets-completed', 'ProfilesController@ticketsCompleted');
     // Tickets
     Route::get('/tickets', 'TicketsController@index');

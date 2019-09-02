@@ -42,6 +42,7 @@
                                     <td>{{ isset($user->profile) ? $user->profile->name : 'Sem Perfil' }} {!! $user->is_coordinator ? '<small><i>(Coordenador)</i></small>' : '' !!}</td>
                                     <td>
                                         <a href="{{ $user->path() . '/edit' }}" class="btn btn-sm btn-primary">Editar</a>
+                                        <a href="{{ $user->path() . '/change-password' }}" class="btn btn-sm btn-secondary">Alterar senha</a>
                                         <form action="/users/{{ $user->id }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')

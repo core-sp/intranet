@@ -90,16 +90,24 @@ class UsersController extends Controller
         ]);
     }
 
+    protected function userOrAdmin($id)
+    {
+        if(auth()->id() === $id || auth()->user()->isAdmin())
+            return true;
+        
+        abort(403, 'Olá');
+    }
+
     public function changePasswordView(User $user)
     {
-        $this->confirmAuthenticity($user);
+        $this->userOrAdmin($user->id);
 
         return view('users.change-password');
     }
 
     public function changePassword(User $user)
     {
-        $this->confirmAuthenticity($user);
+        $this->userOrAdmin($user->id);
 
         $user->fill(['password' => request('password')])->save();
 

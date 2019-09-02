@@ -165,8 +165,6 @@ class UsersTest extends TestCase
     /** @test */
     function a_user_can_update_its_password()
     {
-        $this->withoutExceptionHandling();
-
         $user = $this->signIn();
 
         $this->get($user->path() . '/change-password')->assertOk();
@@ -178,6 +176,42 @@ class UsersTest extends TestCase
         $this->patch($user->path() . '/change-password', $password)->assertRedirect('/');
 
         $this->assertTrue(Hash::check('NovaSenha102030@', $user->fresh()->password));
+    }
+
+    /** @test */
+    function an_admin_can_change_a_users_password()
+    {
+        $this->signInAsAdmin();
+
+        $user = factory('App\User')->create();
+
+        $this->get($user->path() . '/change-password')->assertOk();
+
+        $password = [
+            'password' => 'NovaSenha102030@'
+        ];
+
+        $this->patch($user->path() . '/change-password', $password)->assertRedirect('/');
+
+        $this->assertTrue(Hash::check('NovaSenha102030@', $user->fresh()->password));
+    }
+
+    /** @test */
+    function non_admin_cannot_change_other_users_password()
+    {
+        $this->signIn();
+
+        $user = factory('App\User')->create();
+
+        $this->get($user->path() . '/change-password')->assertForbidden();
+
+        $password = [
+            'password' => 'NovaSenha102030@'
+        ];
+
+        $this->patch($user->path() . '/change-password', $password);
+
+        $this->assertFalse(Hash::check('NovaSenha102030@', $user->fresh()->password));
     }
 
     /** @test */
