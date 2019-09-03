@@ -49,7 +49,6 @@ class Ticket extends Model
 
     public function possibleRespondents()
     {
-        
         isset($this->respondent->id) ? $respondentId = $this->respondent->id : $respondentId = 0;
 
         return \App\User::select('id', 'name')

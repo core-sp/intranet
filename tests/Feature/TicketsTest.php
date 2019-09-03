@@ -137,8 +137,6 @@ class TicketsTest extends TestCase
     /** @test */
     function respondents_can_finish_a_ticket()
     {
-        $this->withoutExceptionHandling();
-
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
@@ -341,5 +339,41 @@ class TicketsTest extends TestCase
         $this->patch($ticket->path() . '/update-respondent', ['respondent_id' => $someUser->id]);
 
         $this->assertNotEquals($someUser->id, $ticket->fresh()->respondent->id);
+    }
+
+    /** @test */
+    function finishing_a_ticket_generates_an_interaction()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $user->profile->id
+        ]);
+
+        $ticket->assignRespondent($user);
+
+        $this->patch($ticket->path() . '/update-status', ['status' => 'Encerrado']);
+
+        $this->assertDatabaseHas('interactions', [
+            'ticket_id' => $ticket->id,
+            'content' => '<p>Chamado finalizado.</p>'
+        ]);
+    }
+
+    /** @test */
+    function completing_a_ticket_generates_an_interaction()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create(['user_id' => $user->id]);
+
+        $this->patch($ticket->path() . '/update-status', ['status' => 'Concluído']);
+     
+        $this->assertDatabaseHas('interactions', [
+            'ticket_id' => $ticket->id,
+            'content' => '<p>Chamado concluído.</p>'
+        ]);
     }
 }

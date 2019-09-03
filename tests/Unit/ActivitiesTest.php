@@ -81,7 +81,7 @@ class ActivitiesTest extends TestCase
 
         $this->patch($ticket->path() . '/update-status', ['status' => 'Encerrado']);
 
-        $this->assertEquals(3, $ticket->activities()->count());
+        $this->assertEquals(4, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> marcou o chamado como <i>' . $ticket->fresh()->status . '</i>'
@@ -99,7 +99,7 @@ class ActivitiesTest extends TestCase
 
         $this->patch($ticket->path() . '/update-status', ['status' => 'Concluído']);
 
-        $this->assertEquals(3, $ticket->activities()->count());
+        $this->assertEquals(4, $ticket->activities()->count());
         $this->assertDatabaseHas('activities', [
             'ticket_id' => $ticket->id,
             'description' => '<strong>' . $john->name . '</strong> marcou o chamado como <i>' . $ticket->fresh()->status . '</i>'

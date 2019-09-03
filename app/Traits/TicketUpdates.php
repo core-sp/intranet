@@ -27,11 +27,24 @@ trait TicketUpdates {
         $this->update(['respondent_id' => $id]);
     }
 
-    public function addInteraction($attributes)
+    protected function mergeAttributes($attributes)
     {
-        $this->update(['status' => 'Em aberto']);
+        return array_merge([
+            'ticket_id' => $this->id,
+            'user_id' => auth()->id(),
+            'content' => '<p>Resposta padrão.</p>'
+        ], $attributes);
+    }
+
+    public function addInteraction($attributes, $status = 'Em aberto')
+    {
+        $merge = $this->mergeAttributes($attributes);
+
+        if($status !== null) {
+            $this->update(['status' => 'Em aberto']);
+        }
         
-        return $this->interactions()->create($attributes);
+        return $this->interactions()->create($merge);
     }
 
     public function recordActivity($message)

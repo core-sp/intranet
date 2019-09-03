@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Ticket;
 
 class TicketUpdatesController extends Controller
@@ -13,7 +12,22 @@ class TicketUpdatesController extends Controller
 
         $ticket->changeStatus(request('status'));
 
+        $this->interactionsAfterUpdatingStatus($ticket, request('status'));
+
         return $this->redirect($ticket->path(), 'Chamado ' . request('status'), 'alert-success');
+    }
+
+    protected function interactionsAfterUpdatingStatus($ticket, $status)
+    {
+        switch ($status) {
+            case 'Encerrado':
+                $ticket->addInteraction(['content' => '<p>Chamado finalizado.</p>'], null);
+            break;
+
+            case 'Concluído':
+                $ticket->addInteraction(['content' => '<p>Chamado concluído.</p>'], null);
+            break;
+        }
     }
 
     public function updateRespondent(Ticket $ticket)

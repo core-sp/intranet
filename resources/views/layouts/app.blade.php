@@ -86,10 +86,17 @@
             </div>
         @endif
 
-        <main class="mb-4">
+        <main>
             @yield('content')
         </main>
+
     </div>
+
+    <footer class="pt-2 pb-2">
+        <div class="container">
+            <p class="mb-0 light">&copy; CORE-SP | Conselho Regional dos Representantes Comerciais do Estado de São Paulo</p>
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/r4mn0lwo1bqizx4qx5y71gn825etof3nqccvy4svo1lhn72k/tinymce/5/tinymce.min.js"></script>

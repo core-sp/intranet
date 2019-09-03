@@ -2,6 +2,15 @@
 
 body, html {
     font-family: 'Roboto', sans-serif;
+    height: 100%;
+}
+
+#app {
+    min-height: calc(100% - 39px);
+}
+
+main {
+    padding-bottom: 30px;
 }
 
 .col {
@@ -135,4 +144,16 @@ label {
 
 .spinner {
     display: none;
+}
+
+.light {
+    font-weight: 300;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    background-color: #FFFFFF;
 }
