@@ -23,11 +23,11 @@ class Profile extends Model
 
     public function tickets()
     {
-        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído')->latest();
+        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído')->orderBy('updated_at', 'DESC');
     }
 
     public function completedTickets()
     {
-        return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->paginate(10);
+        return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->orderBy('updated_at', 'DESC')->paginate(10);
     }
 }

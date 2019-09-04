@@ -36,12 +36,12 @@ class User extends Authenticatable
 
     public function tickets()
     {
-        return $this->hasMany('App\Ticket')->latest();
+        return $this->hasMany('App\Ticket')->orderBy('updated_at', 'DESC');
     }
 
     public function respondentTickets()
     {
-        return $this->hasMany('App\Ticket', 'respondent_id')->latest();
+        return $this->hasMany('App\Ticket', 'respondent_id')->orderBy('updated_at', 'DESC');
     }
 
     public function respondentTicketsWithPagination()
