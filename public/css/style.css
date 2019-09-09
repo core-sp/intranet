@@ -23,6 +23,10 @@ main {
     margin-left: -7.5px;
 }
 
+.flex-one {
+    flex: 1;
+}
+
 .title {
     vertical-align: middle;
     letter-spacing: 3px;
@@ -162,4 +166,9 @@ footer {
     width: 100%;
     box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
     background-color: #FFFFFF;
+}
+
+.refresh {
+    align-self: center;
+    margin-left: 7.5px;
 }

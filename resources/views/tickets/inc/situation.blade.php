@@ -5,6 +5,6 @@
 @else
     <h5 class="mb-0">
         <span class="{{ badge($ticket->status) }} font-weight-normal">{{ $ticket->status }}</span>
-        <counter count="{{ $ticket->interactions->count() }}"></counter>
+        <counter count="{{ $ticket->interactions->count() }}" classes="badge badge-secondary"></counter>
     </h5>
 @endif

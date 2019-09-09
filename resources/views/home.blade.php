@@ -2,11 +2,16 @@
 
 @section('content')
 <div class="container mb-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Home</li>
-        </ol>
-    </nav>
+    <div class="d-flex w-100">
+        <nav aria-label="breadcrumb" class="flex-one">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item active" aria-current="page">Home</li>
+            </ol>
+        </nav>
+        <div class="refresh">
+            <button onClick="window.location.reload();" class="btn btn-primary"><p class="mb-0"><i class="fas fa-redo"></i>&nbsp;&nbsp;Atualizar</p></button>
+        </div>
+    </div>
 </div>
 <div class="container">
     <div class="row justify-content-center">
