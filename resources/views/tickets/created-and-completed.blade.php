@@ -15,7 +15,9 @@
 <div class="container">
     <div class="row mb-3">
         <div class="col">
-            <a href="/tickets/created" class="btn btn-secondary">Meus Chamados</a>
+            <a href="/tickets/created" class="btn btn-secondary">
+                Meus Chamados&nbsp;&nbsp;<counter count="{{ auth()->user()->ticketsCount() }}" classes="badge badge-light"></counter>
+            </a>
         </div>
         <div class="col text-right">
             <a href="/tickets/create" class="btn btn-primary">Novo Chamado</a>
