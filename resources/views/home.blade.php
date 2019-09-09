@@ -33,8 +33,14 @@
                 </div>
                 <div class="card-body">
                     <ul class="mb-0 list-unstyled">
-                        <li><a href="/tickets">Chamados da área: {{ auth()->user()->profile->name }}</a></li>
-                        <li><a href="/tickets/created">Meus chamados</a></li>
+                        <li>
+                            <a href="/tickets">Chamados da área: {{ auth()->user()->profile->name }}</a>
+                            <counter count="{{ auth()->user()->profile->ticketsCount() }}" classes="badge badge-secondary"></counter>
+                        </li>
+                        <li>
+                            <a href="/tickets/created">Meus chamados</a>
+                            <counter count="{{ auth()->user()->ticketsCount() }}" classes="badge badge-secondary"></counter>
+                        </li>
                         <li><a href="/tickets/create">Criar chamado</a></li>
                     </ul>
                 </div>

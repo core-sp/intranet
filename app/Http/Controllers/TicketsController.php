@@ -19,6 +19,11 @@ class TicketsController extends Controller
         return view('tickets.created');
     }
 
+    public function createdAndCompleted()
+    {
+        return view('tickets.created-and-completed');
+    }
+
     public function create()
     {
         $profiles = Profile::select('id', 'name')->get();

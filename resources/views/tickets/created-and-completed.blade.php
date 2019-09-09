@@ -7,17 +7,15 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="/tickets">Chamados</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Meus Chamados</li>
+            <li class="breadcrumb-item"><a href="/tickets/created">Meus Chamados</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Concluídos</li>
         </ol>
     </nav>
 </div>
 <div class="container">
     <div class="row mb-3">
         <div class="col">
-            <a href="/tickets" class="btn btn-secondary">
-                Lista de Chamados&nbsp;&nbsp;<counter count="{{ auth()->user()->profile->ticketsCount() }}" classes="badge badge-light"></counter>
-            </a>
-            <a href="/tickets/created-and-completed" class="btn btn-dark">Meus Chamados Concluídos</a>
+            <a href="/tickets/created" class="btn btn-secondary">Meus Chamados</a>
         </div>
         <div class="col text-right">
             <a href="/tickets/create" class="btn btn-primary">Novo Chamado</a>
@@ -37,20 +35,16 @@
                                 <th>Título</th>
                                 <th>Área requisitada</th>
                                 <th>Prioridade</th>
-                                <th>Situação</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($pagination = auth()->user()->tickets()->paginate(10) as $ticket)
+                            @forelse($pagination = auth()->user()->ticketsCompleted()->paginate(10) as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
                                     <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
                                     <td>{{ $ticket->profile->name }}</td>
                                     <td class="{{ bgPriority($ticket->priority) }}">{{ $ticket->priority }}</td>
-                                    <td>
-                                        @include('tickets.inc.situation')
-                                    </td>
                                     <td>
                                         @if($ticket->status === 'Concluído')
                                             <p class="mb-0 text-muted">

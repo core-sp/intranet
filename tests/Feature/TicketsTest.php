@@ -74,6 +74,20 @@ class TicketsTest extends TestCase
     }
 
     /** @test */
+    function created_and_completed_tickets_are_shown_correctly()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $ticket = factory('App\Ticket')->create(['user_id' => auth()->id()]);
+
+        $this->patch($ticket->path() . '/update-status', ['status' => 'Concluído']);
+
+        $this->get('/tickets/created-and-completed')->assertSee($ticket->title);
+    }
+
+    /** @test */
     function a_ticket_can_have_a_profile_associated_with_it()
     {
         $profile = factory('App\Profile')->create();

@@ -99,4 +99,28 @@ class ProfilesTest extends TestCase
 
         $this->assertDatabaseHas('profiles', ['id' => $profile->id]);
     }
+
+    /** @test */
+    function a_user_can_see_the_count_of_profiles_tickets_on_homepage()
+    {
+        $john = $this->signIn();
+
+        factory('App\Ticket')->create([
+            'profile_id' => $john->profile->id
+        ]);
+
+        $this->get('/')->assertSee('count="1"');
+    }
+
+    /** @test */
+    function a_user_can_see_the_count_of_his_created_tickets_on_homepage()
+    {
+        $john = $this->signIn();
+
+        factory('App\Ticket')->create([
+            'user_id' => $john->id
+        ]);
+
+        $this->get('/')->assertSee('count="1"');
+    }
 }

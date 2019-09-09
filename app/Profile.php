@@ -26,6 +26,11 @@ class Profile extends Model
         return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído')->orderBy('updated_at', 'DESC');
     }
 
+    public function ticketsCount()
+    {
+        return $this->tickets()->count();
+    }
+
     public function completedTickets()
     {
         return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->orderBy('updated_at', 'DESC')->paginate(10);

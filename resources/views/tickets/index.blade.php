@@ -13,7 +13,9 @@
 <div class="container">
     <div class="row mb-3">
         <div class="col">
-            <a href="/tickets/created" class="btn btn-secondary">Meus Chamados</a>
+            <a href="/tickets/created" class="btn btn-secondary">
+                Meus Chamados&nbsp;&nbsp;<counter count="{{ auth()->user()->profile->ticketsCount() }}" classes="badge badge-light"></counter>
+            </a>
             <a href="{{ auth()->user()->profile->path() . '/tickets-completed' }}" class="btn btn-dark">Chamados Concluídos do {{ auth()->user()->profile->name }}</a>
         </div>
         <div class="col text-right">

@@ -36,7 +36,17 @@ class User extends Authenticatable
 
     public function tickets()
     {
-        return $this->hasMany('App\Ticket')->orderBy('updated_at', 'DESC');
+        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído')->orderBy('updated_at', 'DESC');
+    }
+
+    public function ticketsCount()
+    {
+        return $this->tickets()->count();
+    }
+
+    public function ticketsCompleted()
+    {
+        return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->orderBy('updated_at', 'DESC');
     }
 
     public function respondentTickets()

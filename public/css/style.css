@@ -77,11 +77,17 @@ label {
     margin: 5px 0 0 144px;
     color: #444;
     display: block;
+    overflow: hidden;
 }
 
-.direct-chat-text p {
+.direct-chat-text p,
+.direct-chat-text li {
     margin-bottom: .5rem;
     line-height: 1.4;
+}
+
+.direct-chat-text ul {
+    list-style-position: inside;
 }
 
 .direct-chat-text p:last-child {
