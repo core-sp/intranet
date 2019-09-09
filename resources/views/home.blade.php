@@ -9,7 +9,7 @@
             </ol>
         </nav>
         <div class="refresh">
-            <button onClick="window.location.reload();" class="btn btn-primary"><p class="mb-0"><i class="fas fa-redo"></i>&nbsp;&nbsp;Atualizar</p></button>
+            <button onClick="window.location.reload();" class="btn btn-success"><p class="mb-0"><i class="fas fa-redo"></i>&nbsp;&nbsp;Atualizar</p></button>
         </div>
     </div>
 </div>
