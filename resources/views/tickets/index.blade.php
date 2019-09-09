@@ -59,7 +59,7 @@
         <div class="col">
             <div class="card">
                 <h5 class="card-header">
-                    Chamados atribuídos a você
+                    Chamados atribuídos a você&nbsp;&nbsp;<counter count="{{ auth()->user()->respondentTicketsCount() }}" classes="badge badge-secondary"></counter>
                 </h5>
                 <div class="card-body">
                     <table class="table table-bordered mb-0">
