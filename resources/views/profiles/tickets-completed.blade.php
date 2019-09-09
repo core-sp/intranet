@@ -7,7 +7,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="/tickets">Chamados</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Meus Chamados</li>
+            <li class="breadcrumb-item active" aria-current="page">Chamados Concluídos</li>
         </ol>
     </nav>
 </div>
