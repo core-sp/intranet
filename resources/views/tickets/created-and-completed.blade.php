@@ -3,14 +3,15 @@
 @section('content')
 
 <div class="container mb-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
+    <div class="d-flex w-100">
+        <breadcrumb>
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="/tickets">Chamados</a></li>
             <li class="breadcrumb-item"><a href="/tickets/created">Meus Chamados</a></li>
             <li class="breadcrumb-item active" aria-current="page">Concluídos</li>
-        </ol>
-    </nav>
+        </breadcrumb>
+        <refresh-button></refresh-button>
+    </div>
 </div>
 <div class="container">
     <div class="row mb-3">

@@ -3,12 +3,10 @@
 @section('content')
 
 <div class="container mb-3">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Usuários</li>
-        </ol>
-    </nav>
+    <breadcrumb>
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Usuários</li>
+    </breadcrumb>
 </div>
 <div class="container">
     <div class="row mb-3">
