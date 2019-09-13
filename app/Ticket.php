@@ -63,4 +63,18 @@ class Ticket extends Model
             ->where('id', '!=', $this->profile->id)
             ->get();
     }
+
+    public function attachment()
+    {
+        return $this->morphMany('App\Attachment', 'parent');
+    }
+
+    public function addAttachment($file)
+    {
+        \App\Attachment::create([
+            'parent_type' => get_class($this),
+            'parent_id' => $this->id,
+            'file' => $file
+        ]);
+    }
 }

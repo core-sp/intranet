@@ -25,4 +25,18 @@ class Interaction extends Model
             'description' => $message
         ]);
     }
+
+    public function attachment()
+    {
+        return $this->morphMany('App\Attachment', 'parent');
+    }
+
+    public function addAttachment($file)
+    {
+        \App\Attachment::create([
+            'parent_type' => get_class($this),
+            'parent_id' => $this->id,
+            'file' => $file
+        ]);
+    }
 }

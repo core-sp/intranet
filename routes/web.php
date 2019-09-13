@@ -33,6 +33,8 @@ Route::group(['middleware' => 'auth'], function(){
     // Interactions
     Route::get('/tickets/{ticket}/interactions/create', 'InteractionsController@create');
     Route::post('/tickets/{ticket}/interactions', 'InteractionsController@store');
+    // File upload and download
+    Route::post('/upload', 'AttachmentsController@upload');
 });
 
 Auth::routes();

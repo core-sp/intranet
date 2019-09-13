@@ -45,6 +45,8 @@ trait TicketUpdates {
         }
         
         return $this->interactions()->create($merge);
+
+        request('fileName') !== null ? $this->interaction->addAttachment(request('fileName')) : '';
     }
 
     public function recordActivity($message)

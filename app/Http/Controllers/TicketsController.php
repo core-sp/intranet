@@ -42,8 +42,10 @@ class TicketsController extends Controller
     }
 
     public function store()
-    {        
+    {
         $ticket = auth()->user()->tickets()->create($this->validateRequest());
+
+        request('fileName') !== null ? $ticket->addAttachment(request('fileName')) : '';
 
         return redirect($ticket->path())->with([
             'message' => 'Chamado criado com sucesso',

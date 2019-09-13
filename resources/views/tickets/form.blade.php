@@ -42,7 +42,14 @@
                     class="form-control textarea-content"
                 ></textarea>
             </div>
-        </div>  
+        </div>
+        <div class="form-row mt-3">
+            <div class="col">
+                <upload-file>
+                    @csrf
+                </upload-file>
+            </div>
+        </div>
     </div>
     <div class="card-footer text-right">
         <button type="submit" class="btn btn-primary any-submit-button"><i class="spinner fa fa-spinner fa-spin"></i> Salvar</button>

@@ -29,7 +29,9 @@ class InteractionsController extends Controller
     
         $this->authorize('interact', $ticket);
 
-        $ticket->addInteraction($this->validateRequest());
+        $interaction = $ticket->addInteraction($this->validateRequest());
+
+        request('fileName') !== null ? $interaction->addAttachment(request('fileName')) : '';
 
         return redirect($ticket->path())->with([
             'message' => 'Resposta emitida com sucesso',

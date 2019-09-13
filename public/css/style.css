@@ -72,6 +72,11 @@ label {
     float: right;
 }
 
+.direct-chat.msg,
+.direct-chat-text {
+    display: block;
+}
+
 .direct-chat-text {
     border-radius: 0.3rem;
     position: relative;
@@ -80,8 +85,6 @@ label {
     border: 1px solid #d2d6de;
     margin: 5px 0 0 144px;
     color: #444;
-    display: block;
-    overflow: hidden;
 }
 
 .direct-chat-text p,
@@ -109,6 +112,11 @@ label {
     height: 0;
     width: 0;
     pointer-events: none;
+}
+
+.direct-chat-text:before {
+    border-width: 6px;
+    margin-top: -6px;
 }
 
 .right .direct-chat-text {

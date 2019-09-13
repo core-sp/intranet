@@ -48,6 +48,11 @@
                                 class="form-control textarea-content"
                             ></textarea>
                         </div>
+                        <div class="form-group mt-3">
+                            <upload-file>
+                                @csrf
+                            </upload-file>
+                        </div>
                         <div class="form-group mb-0 text-right">
                             <button type="submit" class="btn btn-primary any-submit-button"><i class="spinner fa fa-spinner fa-spin"></i> Responder</button>
                         </div>
@@ -67,6 +72,26 @@
                 </div>
                 <div class="card-body">
                     @foreach($ticket->interactions as $interaction)
+                        @if($interaction->attachment->isNotEmpty())
+                        <div class="row pt-1 mx-2 mb-4">
+                            <div class="direct-chat-msg {{ auth()->id() === $interaction->user->id ? '' : 'right' }}">
+                                <div class="direct-chat-img text-center">
+                                    <p><i>{{ dateAndHour($interaction->created_at) }}</i></p>
+                                    <img src="{{ gravatar_url($interaction->user->email) }}" />
+                                    <p class="m-0"><strong>({{ $interaction->user->name }} - {{ $interaction->user->profile->name }})</strong></p>
+                                </div>
+                                <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info' : '' }}">
+                                    <p><i>{{ $interaction->user->name }}</i> adicionou o anexo:</p>
+                                    <p><strong><i class="fas fa-paperclip"></i> {{ $interaction->attachment[0]->file }}</strong></p>
+                                    <p>
+                                        <a href="{{ $interaction->attachment[0]->storagePath() }}" download>- Baixar</a><br>
+                                        <a href="{{ $interaction->attachment[0]->storagePath() }}" target="_blank">- Visualizar</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        @endif
                         <div class="row mb-4 mt-1 mx-2">
                             <div class="direct-chat-msg {{ auth()->id() === $interaction->user->id ? '' : 'right' }}">
                                 <div class="direct-chat-img text-center">
@@ -81,6 +106,26 @@
                         </div>
                         <hr>
                     @endforeach
+                    @if($ticket->attachment->isNotEmpty())
+                    <div class="row pt-1 mx-2 mb-4">
+                        <div class="direct-chat-msg {{ auth()->id() === $ticket->user->id ? '' : 'right' }}">
+                            <div class="direct-chat-img text-center">
+                                <p><i>{{ dateAndHour($ticket->created_at) }}</i></p>
+                                <img src="{{ gravatar_url($ticket->user->email) }}" />
+                                <p class="m-0"><strong>({{ $ticket->user->name }} - {{ $ticket->user->profile->name }})</strong></p>
+                            </div>
+                            <div class="direct-chat-text">
+                                <p><i>{{ $ticket->user->name }}</i> adicionou o anexo:</p>
+                                <p><strong><i class="fas fa-paperclip"></i> {{ $ticket->attachment[0]->file }}</strong></p>
+                                <p>
+                                    <a href="{{ $ticket->attachment[0]->storagePath() }}" download>- Baixar</a><br>
+                                    <a href="{{ $ticket->attachment[0]->storagePath() }}" target="_blank">- Visualizar</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    @endif
                     <div class="row pt-1 mx-2 mb-2">
                         <div class="direct-chat-msg {{ auth()->id() === $ticket->user->id ? '' : 'right' }}">
                             <div class="direct-chat-img text-center">

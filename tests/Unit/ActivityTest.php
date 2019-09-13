@@ -128,4 +128,42 @@ class ActivitiesTest extends TestCase
             'description' => '<strong>' . $john->name . '</strong> adicionou uma interação à este chamado'
         ]);
     }
+
+    /** @test */
+    function an_activity_is_recorded_when_user_add_an_attachment_to_a_ticket()
+    {
+        $john = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $john->id
+        ]);
+
+        $ticket->addAttachment('Texto.txt');
+
+        $this->assertDatabaseHas('activities', [
+            'ticket_id' => $ticket->id,
+            'description' => '<strong>' . $john->name . '</strong> adicionou o anexo "Texto.txt" à este chamado'
+        ]);
+    }
+
+    /** @test */
+    function an_activity_is_recorded_when_user_add_an_attachment_to_a_interaction()
+    {
+        $john = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $john->profile_id
+        ]);
+
+        $ticket->assignRespondent($john);
+
+        $interaction = $ticket->addInteraction(factory('App\Interaction')->raw());
+
+        $interaction->addAttachment('Corinthians.txt');
+
+        $this->assertDatabaseHas('activities', [
+            'ticket_id' => $ticket->id,
+            'description' => '<strong>' . $john->name . '</strong> adicionou o anexo "Corinthians.txt" à este chamado'
+        ]);
+    }
 }

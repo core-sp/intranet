@@ -83,8 +83,6 @@ class InteractionsTest extends TestCase
     /** @test */
     function respondents_can_create_interactions_on_the_ticket()
     {
-        $this->withoutExceptionHandling();
-
         $user = $this->signIn();
 
         $ticket = factory('App\Ticket')->create([
@@ -176,7 +174,6 @@ class InteractionsTest extends TestCase
     /** @test */
     function respondents_can_see_pending_response_status()
     {
-        $this->withoutExceptionHandling();
         $john = $this->signIn();
         $jane = factory('App\User')->create();
 

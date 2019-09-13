@@ -76,8 +76,6 @@ class TicketsTest extends TestCase
     /** @test */
     function created_and_completed_tickets_are_shown_correctly()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $ticket = factory('App\Ticket')->create(['user_id' => auth()->id()]);
