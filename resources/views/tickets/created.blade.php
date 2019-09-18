@@ -18,7 +18,6 @@
             <a href="/tickets" class="btn btn-secondary">
                 Lista de Chamados&nbsp;&nbsp;<counter count="{{ auth()->user()->profile->ticketsCount() }}" classes="badge badge-light"></counter>
             </a>
-            <a href="/tickets/created-and-completed" class="btn btn-dark">Meus Chamados Concluídos</a>
         </div>
         <div class="col text-right">
             <a href="/tickets/create" class="btn btn-primary">Novo Chamado</a>
@@ -31,6 +30,28 @@
                     Seus chamados
                 </h5>
                 <div class="card-body">
+                    <div class="col-6 nopadding mb-3 position-relative">
+                        <form method="get">
+                            <div class="input-group mb-3">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Buscar..."
+                                    name="q"
+                                    value="{{ !empty(app('request')->input('q')) ? app('request')->input('q') : '' }}"
+                                />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="submit">Pesquisar</button>
+                                </div>
+                            </div>
+                        </form>
+                        @if(app('request')->input('q'))
+                            <div class="clean-search">
+                                <a href="{{ '/tickets/created' }}"><i class="fas fa-times"></i> Limpar filtro</a>
+                            </div>
+                        @endif
+                    </div>
+                    {!! !empty(app('request')->input('q')) ? '<p class="mb-1"><small><i>Resultados da busca:</i> <strong>'.app('request')->input('q').'</strong></small></p>' : '' !!}
                     <table class="table table-bordered mb-0">
                         <thead class="thead">
                             <tr>
@@ -43,45 +64,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($pagination = auth()->user()->tickets()->paginate(10) as $ticket)
-                                <tr>
-                                    <td>{{ $ticket->id }}</td>
-                                    <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
-                                    <td>{{ $ticket->profile->name }}</td>
-                                    <td class="{{ bgPriority($ticket->priority) }}">{{ $ticket->priority }}</td>
-                                    <td>
-                                        @include('tickets.inc.situation')
-                                    </td>
-                                    <td>
-                                        @if($ticket->status === 'Concluído')
-                                            <p class="mb-0 text-muted">
-                                                <small>
-                                                    <i class="far fa-check-square"></i> CONCLUÍDO
-                                                </small>
-                                            </p>
-                                        @else
-                                            @if(!count($ticket->interactions))
-                                                <p class="mb-0">
-                                                    <small>
-                                                        <i class="far fa-circle"></i> AGUARDANDO INTERAÇÃO
-                                                    </small>
-                                                </p>
-                                            @else
-                                                @include('tickets.inc.status')
-                                            @endif
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6">Nenhum chamado criado ainda.</td>
-                                </tr>
-                            @endforelse
+                            @if(app('request')->input('q'))
+                                @forelse (auth()->user()->searchUserTickets(app('request')->input('q')) as $ticket)
+                                    @include('tickets.inc.created-tickets')
+                                @empty
+                                    <tr>
+                                        <td colspan="6">Nenhum chamado encontrado.</td>
+                                    </tr>
+                                @endforelse
+                            @else
+                                @forelse($pagination = auth()->user()->tickets()->paginate(10) as $ticket)
+                                    @include('tickets.inc.created-tickets')
+                                @empty
+                                    <tr>
+                                        <td colspan="6">Nenhum chamado criado ainda.</td>
+                                    </tr>
+                                @endforelse
+                            @endif
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer">
-                    {{ $pagination->links() }}
+                    {{ isset($pagination) ? $pagination->links() : '' }}
                 </div>
             </div>
         </div>

@@ -27,6 +27,10 @@ main {
     flex: 1;
 }
 
+.nopadding {
+    padding: 0;
+}
+
 .title {
     vertical-align: middle;
     letter-spacing: 3px;
@@ -174,4 +178,14 @@ footer {
     width: 100%;
     box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
     background-color: #FFFFFF;
+}
+
+.clean-search {
+    position: absolute;
+    right: -100px;
+    top: 7px;
+}
+
+.clean-search a {
+    color: red;
 }

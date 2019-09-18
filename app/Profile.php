@@ -35,4 +35,21 @@ class Profile extends Model
     {
         return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->orderBy('updated_at', 'DESC')->paginate(10);
     }
+
+    public function searchCompletedTickets($search)
+    {
+        return $this
+            ->hasMany('App\Ticket')
+            ->where('status', '=', 'Concluído')
+            ->where(function($query) use ($search) {
+                $query
+                    ->where('title', 'LIKE', '%'.$search.'%')
+                    ->orWhere('content', 'LIKE', '%'.htmlentities($search).'%')
+                    ->orWhereHas('respondent', function($q) use ($search){
+                        $q->where('name', 'LIKE', '%'.$search.'%');
+                    });
+            })->orderBy('updated_at', 'DESC')
+            ->limit(50)
+            ->get();
+    }
 }

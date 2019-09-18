@@ -74,7 +74,7 @@ class TicketsTest extends TestCase
     }
 
     /** @test */
-    function created_and_completed_tickets_are_shown_correctly()
+    function completed_tickets_are_shown_correctly()
     {
         $this->signIn();
 
@@ -82,7 +82,7 @@ class TicketsTest extends TestCase
 
         $this->patch($ticket->path() . '/update-status', ['status' => 'Concluído']);
 
-        $this->get('/tickets/created-and-completed')->assertSee($ticket->title);
+        $this->get('/tickets/created')->assertSee($ticket->title);
     }
 
     /** @test */
@@ -387,5 +387,42 @@ class TicketsTest extends TestCase
             'ticket_id' => $ticket->id,
             'content' => '<p>Chamado concluído.</p>'
         ]);
+    }
+
+    /** @test */
+    function a_user_can_search_posts_from_his_profile()
+    {        
+        $john = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'profile_id' => $john->profile->id,
+            'status' => 'Concluído'
+        ]);
+
+        $this
+            ->call('GET', $john->profile->path() . '/tickets-completed', ['q' => 'Equivocandose'])
+            ->assertSee('Nenhum chamado encontrado.');
+
+        $this
+            ->call('GET', $john->profile->path() . '/tickets-completed', ['q' => $ticket->title])
+            ->assertSee($ticket->title);
+    }
+
+    /** @test */
+    function a_user_can_search_through_his_created_posts()
+    {        
+        $john = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $john->id,
+        ]);
+
+        $this
+            ->call('GET', '/tickets/created', ['q' => 'Equivocandose'])
+            ->assertSee('Nenhum chamado encontrado.');
+
+        $this
+            ->call('GET', '/tickets/created', ['q' => $ticket->title])
+            ->assertSee($ticket->title);
     }
 }

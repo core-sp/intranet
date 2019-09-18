@@ -27,9 +27,31 @@
         <div class="col">
             <div class="card">
                 <h5 class="card-header">
-                    Seus chamados
+                    Chamados Concluídos do {{ auth()->user()->profile->name }}
                 </h5>
                 <div class="card-body">
+                    <div class="col-6 nopadding mb-3 position-relative">
+                        <form method="get">
+                            <div class="input-group mb-3">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Buscar..."
+                                    name="q"
+                                    value="{{ !empty(app('request')->input('q')) ? app('request')->input('q') : '' }}"
+                                />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="submit">Pesquisar</button>
+                                </div>
+                            </div>
+                        </form>
+                        @if(app('request')->input('q'))
+                            <div class="clean-search">
+                                <a href="{{ auth()->user()->profile->path() . '/tickets-completed' }}"><i class="fas fa-times"></i> Limpar filtro</a>
+                            </div>
+                        @endif
+                    </div>
+                    {!! !empty(app('request')->input('q')) ? '<p class="mb-1"><small><i>Resultados da busca:</i> <strong>'.app('request')->input('q').'</strong></small></p>' : '' !!}
                     <table class="table table-bordered mb-0">
                         <thead class="thead">
                             <tr>
@@ -41,24 +63,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($pagination = $profile->completedTickets() as $ticket)
-                                <tr>
-                                    <td>{{ $ticket->id }}</td>
-                                    <td><a href="{{ $ticket->path() }}">{{ $ticket->title }}</a></td>
-                                    <td class="{{ bgPriority($ticket->priority) }}">{{ $ticket->priority }}</td>
-                                    <td>{!! isset($ticket->respondent->name) ? $ticket->respondent->name : '<i>Sem atribuição</i>' !!}</td>
-                                    <td><strong class="text-muted">{{ dateAndHour($ticket->updated_at) }}</strong></td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5">Nenhum chamado concluído ainda.</td>
-                                </tr>
-                            @endforelse
+                            @if(app('request')->input('q'))
+                                @forelse($profile->searchCompletedTickets(app('request')->input('q')) as $ticket)
+                                    @include('tickets.inc.completed-tickets-row')
+                                @empty
+                                    <tr>
+                                        <td colspan="5">Nenhum chamado encontrado.</td>
+                                    </tr>
+                                @endforelse
+                            @else
+                                @forelse($pagination = $profile->completedTickets() as $ticket)
+                                    @include('tickets.inc.completed-tickets-row')
+                                @empty
+                                    <tr>
+                                        <td colspan="5">Nenhum chamado concluído ainda.</td>
+                                    </tr>
+                                @endforelse
+                            @endif
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer">
-                    {{ $pagination->links() }}
+                    {{ isset($pagination) ? $pagination->links() : '' }}
                 </div>
             </div>
         </div>

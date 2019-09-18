@@ -36,17 +36,12 @@ class User extends Authenticatable
 
     public function tickets()
     {
-        return $this->hasMany('App\Ticket')->where('status', '!=', 'Concluído')->orderBy('updated_at', 'DESC');
+        return $this->hasMany('App\Ticket')->orderBy('updated_at', 'DESC');
     }
 
     public function ticketsCount()
     {
-        return $this->tickets()->count();
-    }
-
-    public function ticketsCompleted()
-    {
-        return $this->hasMany('App\Ticket')->where('status', '=', 'Concluído')->orderBy('updated_at', 'DESC');
+        return $this->tickets()->where('status', '!=', 'Concluído')->count();
     }
 
     public function respondentTickets()
@@ -95,5 +90,19 @@ class User extends Authenticatable
     public function path()
     {
         return '/users/' . $this->id;
+    }
+
+    public function searchUserTickets($search)
+    {
+        return $this
+            ->tickets()
+            ->where('user_id', 'LIKE', auth()->id())
+            ->where(function($query) use($search){
+                $query->where('title', 'LIKE', '%'.$search.'%')
+                    ->orWhere('content', 'LIKE', '%'.htmlentities($search).'%')
+                    ->orWhere('status', 'LIKE', '%'.$search.'%');
+            })->orderBy('updated_at', 'DESC')
+            ->limit(50)
+            ->get();
     }
 }
