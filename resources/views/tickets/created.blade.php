@@ -36,7 +36,7 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    placeholder="Buscar..."
+                                    placeholder='Buscar em "Seus Chamados"...'
                                     name="q"
                                     value="{{ !empty(app('request')->input('q')) ? app('request')->input('q') : '' }}"
                                 />
@@ -51,7 +51,9 @@
                             </div>
                         @endif
                     </div>
-                    {!! !empty(app('request')->input('q')) ? '<p class="mb-1"><small><i>Resultados da busca:</i> <strong>'.app('request')->input('q').'</strong></small></p>' : '' !!}
+                    @if(!empty(app('request')->input('q')))
+                        <p class="mb-1"><small><i>{{ auth()->user()->searchUserTickets(app('request')->input('q'))->count() }} resultado{{ auth()->user()->searchUserTickets(app('request')->input('q'))->count() > 1 ? 's' : '' }} para a busca:</i> <strong> {{ app('request')->input('q') }}</strong></small></p>
+                    @endif
                     <table class="table table-bordered mb-0">
                         <thead class="thead">
                             <tr>
