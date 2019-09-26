@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Meus Chamados'])
 
 @section('content')
 
@@ -27,7 +27,7 @@
         <div class="col">
             <div class="card">
                 <h5 class="card-header">
-                    Seus chamados
+                    Meus chamados
                 </h5>
                 <div class="card-body">
                     <div class="col-6 nopadding mb-3 position-relative">
@@ -36,7 +36,7 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    placeholder='Buscar em "Seus Chamados"...'
+                                    placeholder='Buscar em "Meus Chamados"...'
                                     name="q"
                                     value="{{ !empty(app('request')->input('q')) ? app('request')->input('q') : '' }}"
                                 />
