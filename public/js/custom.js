@@ -1,8 +1,8 @@
 $(document).ready(function(){
     
     $('.any-form').on('submit', function(){
-        $('.any-submit-button').attr('disabled', 'true');
         $('.spinner').show();
+        $('.any-submit-button').attr('disabled', 'true');
     });
 
     $('.any-delete-button').on('click', function(){

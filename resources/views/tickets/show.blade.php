@@ -21,7 +21,7 @@
                 Responder
             </a>
             @if(changeStatusBtn($ticket))
-            <form action="{{ $ticket->path() . '/update-status' }}" method="POST" class="d-inline any-form">
+            <update-status method="POST" action="{{ $ticket->path() . '/update-status' }}" class="d-inline any-form" hasrespondent="{{ strval($ticket->respondent_id) }}">
                 @csrf
                 @method('PATCH')
                 <input type="hidden" name="status" value="{{ changeStatusBtn($ticket)['value'] }}">
@@ -31,7 +31,7 @@
                 >
                     <i class="spinner fa fa-spinner fa-spin"></i> {{ changeStatusBtn($ticket)['text'] }}
                 </button>
-            </form>
+            </update-status>
             @endif
             <div class="collapse mt-2" id="collapse-interaction">
                 <div class="card card-body">

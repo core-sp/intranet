@@ -181,6 +181,21 @@ class TicketsTest extends TestCase
     }
 
     /** @test */
+    function a_ticket_owner_cannot_complete_a_ticket_if_it_doesnt_have_a_respondent()
+    {
+        $user = $this->signIn();
+
+        $ticket = factory('App\Ticket')->create([
+            'user_id' => $user->id,
+            'respondent_id' => null
+        ]);
+
+        $this->patch($ticket->path() . '/update-status', ['status' => 'Concluído'])->assertForbidden();
+
+        $this->assertNotEquals('Concluído', $ticket->fresh()->status);
+    }
+
+    /** @test */
     function an_owner_cannot_finish_a_ticket()
     {
         $user = $this->signIn();

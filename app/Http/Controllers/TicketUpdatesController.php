@@ -10,11 +10,18 @@ class TicketUpdatesController extends Controller
     {
         $this->protectionToChangeStatus($ticket);
 
+        $this->ensureRespondentIsset($ticket);
+
         $ticket->changeStatus(request('status'));
 
         $this->interactionsAfterUpdatingStatus($ticket, request('status'));
 
         return $this->redirect($ticket->path(), 'Chamado ' . request('status'), 'alert-success');
+    }
+
+    protected function ensureRespondentIsset($ticket) {
+        if($ticket->respondent_id === null)
+            abort(403, 'Por favor, atribua o chamado à algum usuário antes de concluí-lo.');
     }
 
     protected function interactionsAfterUpdatingStatus($ticket, $status)
