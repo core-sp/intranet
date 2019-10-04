@@ -34,13 +34,7 @@
         <div class="form-row mt-3">
             <div class="col">
                 <label for="content">Conteúdo</label>
-                <textarea
-                    name="content"
-                    id="content"
-                    rows="15"
-                    placeholder="Conteúdo do chamado"
-                    class="form-control textarea-content"
-                ></textarea>
+                <tinymce></tinymce>
             </div>
         </div>
         <div class="form-row mt-3">

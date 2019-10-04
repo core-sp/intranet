@@ -7,7 +7,8 @@ Vue.component('breadcrumb', require('./components/Breadcrumb.vue').default);
 Vue.component('refresh-button', require('./components/RefreshButton.vue').default);
 Vue.component('upload-file', require('./components/UploadFile.vue').default);
 Vue.component('update-status', require('./components/UpdateStatus.vue').default);
+Vue.component('tinymce', require('./components/TinyMce.vue').default);
 
-const app = new Vue({
+new Vue({
     el: '#app',
 });

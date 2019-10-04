@@ -99,7 +99,6 @@
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.tiny.cloud/1/r4mn0lwo1bqizx4qx5y71gn825etof3nqccvy4svo1lhn72k/tinymce/5/tinymce.min.js"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
 
 </body>
