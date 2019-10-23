@@ -40,13 +40,7 @@
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                         <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
                         <div class="form-group">
-                            <textarea
-                                name="content"
-                                id="content"
-                                rows="20"
-                                placeholder="Descrição"
-                                class="form-control textarea-content"
-                            ></textarea>
+                            <tinymce></tinymce>
                         </div>
                         <div class="form-group mt-3">
                             <upload-file>
