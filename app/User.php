@@ -101,9 +101,11 @@ class User extends Authenticatable
             ->where('user_id', 'LIKE', auth()->id())
             ->where(function($query) use($searches){
                 foreach($searches as $search) {
-                    $query->where('title', 'LIKE', '%'.$search.'%')
-                        ->orWhere('content', 'LIKE', '%'.htmlentities($search).'%')
-                        ->orWhere('status', 'LIKE', '%'.$search.'%');
+                    $query->where(function($qubo) use ($search){
+                        $qubo->where('title', 'LIKE', '%'.$search.'%')
+                            ->orWhere('content', 'LIKE', '%'.htmlentities($search).'%')
+                            ->orWhere('status', 'LIKE', '%'.$search.'%');
+                    });
                 }
             })->orderBy('updated_at', 'DESC')
             ->limit(50)

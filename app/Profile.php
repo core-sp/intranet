@@ -38,18 +38,20 @@ class Profile extends Model
 
     public function searchCompletedTickets($search)
     {
-        $searches = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY);
+        $searches = preg_split('/\s+/', $search, -1);
 
         return $this
             ->hasMany('App\Ticket')
             ->where('status', '=', 'Concluído')
             ->where(function($query) use ($searches) {
                 foreach($searches as $search) {
-                    $query->where('title', 'LIKE', '%'.$search.'%')
-                        ->orWhere('content', 'LIKE', '%'.htmlentities($search).'%')
-                        ->orWhereHas('respondent', function($q) use ($search){
-                            $q->where('name', 'LIKE', '%'.$search.'%');
-                        });
+                    $query->where(function($qubo) use ($search){
+                        $qubo->where('title', 'LIKE', '%'.$search.'%')
+                            ->orWhere('content', 'LIKE', '%'.htmlentities($search).'%')
+                            ->orWhereHas('respondent', function($q) use ($search){
+                                $q->where('name', 'LIKE', '%'.$search.'%');
+                            });
+                    });
                 }
             })->orderBy('updated_at', 'DESC')
             ->limit(50)
