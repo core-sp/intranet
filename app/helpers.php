@@ -81,3 +81,11 @@ function bgPriority($priority)
         break;
     }
 }
+
+function removeBlankLines($str)
+{
+    $newStr = preg_replace('/<p[^>]*>&nbsp;<\\/p[^>]*>/', '', $str);
+    $newStr = preg_replace('/(<br\ ?\/?>)+/', '<br>', $newStr);
+
+    return $newStr;
+}
