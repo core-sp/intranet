@@ -84,7 +84,7 @@ function bgPriority($priority)
 
 function removeBlankLines($str)
 {
-    $newStr = preg_replace('/<p[^>]*>&nbsp;<\\/p[^>]*>/', '', $str);
+    $newStr = preg_replace('/<([^>\s]+)[^>]*>(?:\s*(?:<br \/>|&nbsp;|&thinsp;|&ensp;|&emsp;|&#8201;|&#8194;|&#8195;)\s*)*<\/\1>/', '', $str);
     $newStr = preg_replace('/(<br\ ?\/?>)+/', '<br>', $newStr);
 
     return $newStr;
