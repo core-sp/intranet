@@ -30,7 +30,7 @@
                     Meus chamados
                 </h5>
                 <div class="card-body">
-                    <div class="col-6 nopadding mb-3 position-relative">
+                    <div class="col-8 nopadding mb-3 position-relative">
                         <form method="get">
                             <div class="input-group mb-3">
                                 <input
@@ -40,19 +40,32 @@
                                     name="q"
                                     value="{{ !empty(app('request')->input('q')) ? app('request')->input('q') : '' }}"
                                 />
+                                <select name="s" id="status" class="form-control">
+                                    <option value="" disabled selected>Selecione o status...</option>
+                                    <option value="o" {{ app('request')->input('s') === 'o' ? 'selected' : '' }}>Qualquer</option>
+                                    <option value="Em aberto" {{ app('request')->input('s') === 'Em aberto' ? 'selected' : '' }}>Em aberto</option>
+                                    <option value="Encerrado" {{ app('request')->input('s') === 'Encerrado' ? 'selected' : '' }}>Encerrado</option>
+                                    <option value="Concluído" {{ app('request')->input('s') === 'Concluído' ? 'selected' : '' }}>Concluído</option>
+                                </select>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="submit">Pesquisar</button>
                                 </div>
                             </div>
                         </form>
-                        @if(app('request')->input('q'))
+                        @if(app('request')->input('q') || app('request')->input('s'))
                             <div class="clean-search">
                                 <a href="{{ '/tickets/created' }}"><i class="fas fa-times"></i> Limpar filtro</a>
                             </div>
                         @endif
                     </div>
                     @if(!empty(app('request')->input('q')))
-                        <p class="mb-1"><small><i>{{ auth()->user()->searchUserTickets(app('request')->input('q'))->count() }} resultado{{ auth()->user()->searchUserTickets(app('request')->input('q'))->count() > 1 ? 's' : '' }} para a busca:</i> <strong> {{ app('request')->input('q') }}</strong></small></p>
+                        <p class="mb-1 d-inline"><small><i>{{ auth()->user()->searchUserTickets(app('request')->input('q'), app('request')->input('s'))->count() }} resultado{{ auth()->user()->searchUserTickets(app('request')->input('q'), app('request')->input('s'))->count() > 1 ? 's' : '' }} para a busca:</i> <strong> {{ app('request')->input('q') }}</strong></small></p>
+                    @endif
+                    @if (!empty(app('request')->input('s')) && !empty(app('request')->input('q')))
+                        |
+                    @endif
+                    @if(!empty(app('request')->input('s')))
+                        <p class="d-inline"><small><i>Filtro: </i><strong>{{ app('request')->input('s') === 'o' ? 'Qualquer' : app('request')->input('s') }}</strong></small></p>
                     @endif
                     <table class="table table-bordered mb-0">
                         <thead class="thead">
@@ -66,8 +79,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if(app('request')->input('q'))
-                                @forelse (auth()->user()->searchUserTickets(app('request')->input('q')) as $ticket)
+                            @if(app('request')->input('q') || app('request')->input('s'))
+                                @forelse (auth()->user()->searchUserTickets(app('request')->input('q'), app('request')->input('s')) as $ticket)
                                     @include('tickets.inc.created-tickets')
                                 @empty
                                     <tr>

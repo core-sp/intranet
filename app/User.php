@@ -92,13 +92,14 @@ class User extends Authenticatable
         return '/users/' . $this->id;
     }
 
-    public function searchUserTickets($search)
+    public function searchUserTickets($search, $status)
     {
         $searches = preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY);
 
         return $this
             ->tickets()
             ->where('user_id', 'LIKE', auth()->id())
+            ->where('status', 'LIKE', '%'. $status .'%')
             ->where(function($query) use($searches){
                 foreach($searches as $search) {
                     $query->where(function($qubo) use ($search){
