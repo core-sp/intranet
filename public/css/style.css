@@ -82,7 +82,6 @@ label {
 }
 
 .direct-chat-text {
-    border-radius: 0.3rem;
     position: relative;
     background: #d2d6de;
     border: 1px solid #d2d6de;
@@ -93,6 +92,18 @@ label {
     max-height: 750px;
     padding: 15px 20px;
     display: block;
+}
+
+.chat-left {
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.chat-right {
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
 }
 
 .direct-chat-text p,
@@ -109,35 +120,9 @@ label {
     margin-bottom: 0px;
 }
 
-.direct-chat-text:after,
-.direct-chat-text:before {
-    position: absolute;
-    right: 100%;
-    top: 15px;
-    border: solid transparent;
-    border-right-color: #d2d6de;
-    content: ' ';
-    height: 0;
-    width: 0;
-    pointer-events: none;
-}
-
-.direct-chat-text:before {
-    border-width: 6px;
-    margin-top: -6px;
-}
-
 .right .direct-chat-text {
     margin-right: 144px;
     margin-left: 0;
-}
-
-.right .direct-chat-text:after,
-.right .direct-chat-text:before {
-    right: auto;
-    left: 100%;
-    border-right-color: transparent;
-    border-left-color: #d2d6de;
 }
 
 .direct-chat-text::-webkit-scrollbar {
@@ -154,7 +139,7 @@ label {
 }
   
 .direct-chat-text::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+    background: #555;   
 }
 
 .direct-chat-text table td {
