@@ -129,7 +129,7 @@
                                 <img src="{{ gravatar_url($ticket->user->email) }}" />
                                 <p class="m-0"><strong>({{ $ticket->user->name }} - {{ $ticket->user->profile->name }})</strong></p>
                             </div>
-                            <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info chat-left' : 'chat-right' }}">
+                            <div class="direct-chat-text {{ $ticket->user->isRespondent($ticket) ? 'bg-info chat-left' : 'chat-right' }}">
                                 <h5>{{ $ticket->title }}</h5>
                                 {!! removeBlankLines($ticket->content) !!}
                             </div>
