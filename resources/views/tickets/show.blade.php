@@ -74,7 +74,7 @@
                                     <img src="{{ gravatar_url($interaction->user->email) }}" />
                                     <p class="m-0"><strong>({{ $interaction->user->name }} - {{ $interaction->user->profile->name }})</strong></p>
                                 </div>
-                                <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info' : '' }}">
+                                <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info chat-left' : 'chat-right' }}">
                                     <p><i>{{ $interaction->user->name }}</i> adicionou o anexo:</p>
                                     <p><strong><i class="fas fa-paperclip"></i> {{ $interaction->attachment[0]->file }}</strong></p>
                                     <p>
@@ -129,7 +129,7 @@
                                 <img src="{{ gravatar_url($ticket->user->email) }}" />
                                 <p class="m-0"><strong>({{ $ticket->user->name }} - {{ $ticket->user->profile->name }})</strong></p>
                             </div>
-                            <div class="direct-chat-text chat-right">
+                            <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info chat-left' : 'chat-right' }}">
                                 <h5>{{ $ticket->title }}</h5>
                                 {!! removeBlankLines($ticket->content) !!}
                             </div>
