@@ -94,7 +94,9 @@
                                     <p class="m-0"><strong>({{ $interaction->user->name }} - {{ $interaction->user->profile->name }})</strong></p>
                                 </div>
                                 <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'bg-info' : '' }}">
-                                    {!! removeBlankLines($interaction->content) !!}
+                                    <div class="d-inline-block">
+                                        {!! removeBlankLines($interaction->content) !!}
+                                    </div>
                                 </div>
                             </div>
                         </div>

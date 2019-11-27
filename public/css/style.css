@@ -84,11 +84,15 @@ label {
 .direct-chat-text {
     border-radius: 0.3rem;
     position: relative;
-    padding: 15px 20px;
     background: #d2d6de;
     border: 1px solid #d2d6de;
     margin: 5px 0 0 144px;
     color: #444;
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 750px;
+    padding: 15px 20px;
+    display: block;
 }
 
 .direct-chat-text p,
@@ -134,6 +138,28 @@ label {
     left: 100%;
     border-right-color: transparent;
     border-left-color: #d2d6de;
+}
+
+.direct-chat-text::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+  
+.direct-chat-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+   
+.direct-chat-text::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+  
+.direct-chat-text::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.direct-chat-text table td {
+    padding: 5px;
+    line-height: 1.2;
 }
 
 .pagination {
