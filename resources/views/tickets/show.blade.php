@@ -110,7 +110,7 @@
                                 <img src="{{ gravatar_url($ticket->user->email) }}" />
                                 <p class="m-0"><strong>({{ $ticket->user->name }} - {{ $ticket->user->profile->name }})</strong></p>
                             </div>
-                            <div class="direct-chat-text {{ $interaction->user->isRespondent($ticket) ? 'chat-left' : 'chat-right' }}">
+                            <div class="direct-chat-text {{ $ticket->user->isRespondent($ticket) ? 'chat-left' : 'chat-right' }}">
                                 <p><i>{{ $ticket->user->name }}</i> adicionou o anexo:</p>
                                 <p><strong><i class="fas fa-paperclip"></i> {{ $ticket->attachment[0]->file }}</strong></p>
                                 <p>
