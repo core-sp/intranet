@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/tickets/{ticket}/interactions', 'InteractionsController@store');
     // File upload and download
     Route::post('/upload', 'AttachmentsController@upload');
+    Route::get('/protestos', 'ProtestoController@index');
 });
 
 Auth::routes();
