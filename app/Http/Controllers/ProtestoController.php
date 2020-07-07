@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use DOMDocument;
+use App\ProtestoComarca;
 use Illuminate\Http\Request;
 use SimpleXMLElement;
 use SoapClient;
 
 class ProtestoController extends Controller
 {
+    public function index()
+    {
+        $comarcas = ProtestoComarca::all();
+        return view('protestos.index', compact('comarcas'));
+    }
+
     protected function connection()
     {
         $url = 'http://homologcra.protesto.com.br/cra/webservice/protesto_v2.php?wsdl';
@@ -23,7 +29,7 @@ class ProtestoController extends Controller
     protected function data()
     {
         header('Content-Type: text/html; charset=UTF-8');
-        $csv = array_map('str_getcsv', file(public_path('amostra_1398.csv'), FILE_SKIP_EMPTY_LINES));
+        $csv = array_map('str_getcsv', file(public_path('/storage/csv/' . request('fileName')), FILE_SKIP_EMPTY_LINES));
         $keys = array_shift($csv);
         foreach ($csv as $i => $row) {
             $csv[$i] = array_combine($keys, $row);
@@ -41,7 +47,7 @@ class ProtestoController extends Controller
         $hd->addAttribute('h05', 'BFO');
         $hd->addAttribute('h06', 'SDT');
         $hd->addAttribute('h07', 'TPR');
-        $hd->addAttribute('h08', '2');
+        // $hd->addAttribute('h08', '2');
         // $hd->addAttribute('h09', sprintf('%04d', count($this->data())));
         $hd->addAttribute('h10', '0001');
         $hd->addAttribute('h11', '0001');
@@ -173,6 +179,27 @@ class ProtestoController extends Controller
         }
     }
 
+    protected function montaNrRemessa($xml)
+    {
+        foreach($xml->xpath('//comarca') as $comarca) {
+            $codigo = (string) $comarca['CodMun'];
+            $hasNrRemessa = ProtestoComarca::where('codigo',$codigo)->first();
+            if(!$hasNrRemessa) {
+                foreach($comarca->children() as $tag => $hd) {
+                    if($tag === 'hd') {
+                        $hd->addAttribute('h08', '1');
+                    }
+                }
+            } else {
+                foreach($comarca->children() as $tag => $hd) {
+                    if($tag === 'hd') {
+                        $hd->addAttribute('h08', $hasNrRemessa->nr_remessa + 1);
+                    }
+                }
+            }
+        }
+    }
+
     protected function xml()
     {
         $remessa = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" standalone="no"?><remessa/>');
@@ -184,6 +211,7 @@ class ProtestoController extends Controller
         $this->montaTitulos($remessa);
         $this->montaTrailler($remessa);
         $this->montaNrSequencial($remessa);
+        $this->montaNrRemessa($remessa);
 
         return $remessa->asXML();
     }
@@ -231,14 +259,55 @@ class ProtestoController extends Controller
         return $codigosMunicipios;
     }
 
-    public function index()
+    public function saveDb($xml) {
+        $municipios = $this->getMunicipios();
+        $erros = [];
+        $sucessos = [];
+        foreach($xml->xpath('//comarca') as $comarca) {
+            $codigo = (string) $comarca['codigo'];
+            $codigo_retorno = (string) $comarca->ocorrencias->ocorrencia->codigo[0];
+            if($codigo_retorno === '0000') {
+                $qtd_titulos = $comarca->ocorrencias->ocorrencia->titulos_originais[0];
+                $comarcaDb = ProtestoComarca::where('codigo', $codigo)->first();
+                if($comarcaDb) {
+                    $comarcaDb->count_titulos += $qtd_titulos;
+                    $comarcaDb->increment('nr_remessa');
+                } else {
+                    $comarca = array_search($codigo, array_column($municipios, 'COD MUNIC.'));
+                    ProtestoComarca::create([
+                        'codigo' => $codigo,
+                        'comarca' => $municipios[$comarca]['COMARCA'],
+                        'count_titulos' => $qtd_titulos,
+                        'nr_remessa' => 1
+                    ]);
+                }
+                array_push($sucessos, [
+                    'codigo_comarca' => $codigo,
+                    'titulos_enviados' => $qtd_titulos
+                ]);
+            } else {
+                array_push($erros, [
+                    'codigo_comarca' => $codigo,
+                    'ocorrencia' => $codigo_retorno,
+                    'info' => (string) $comarca->ocorrencias->ocorrencia->ocorrencia[0]
+                ]);
+            }
+        }
+        return [
+            'sucessos' => $sucessos,
+            'erros' => $erros
+        ];
+    }
+
+    public function remessaView()
     {
-        $teste = $this->xml();
-        // $envio = $this->connection()->remessa('SP', $this->nomeArquivo(), $this->xml());
-        // dd($envio);
-        return response($teste)
-            ->withHeaders([
-                'Content-Type' => 'text/xml'
-            ]);
+        return view('protestos.remessa');
+    }
+
+    public function send()
+    {
+        $retorno = $this->connection()->remessa('SP', $this->nomeArquivo(), $this->xml());
+        $erros_sucessos = $this->saveDb(simplexml_load_string($retorno));
+        return view('protestos.retorno', compact('erros_sucessos'));
     }
 }

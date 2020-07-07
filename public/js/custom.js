@@ -9,4 +9,7 @@ $(document).ready(function(){
         return confirm('Tem certeza que deseja fazer isso?');
     });
 
+    $('#form-remessa').on('submit', function(){
+        $('#submit-remessa').show();
+    });
 });

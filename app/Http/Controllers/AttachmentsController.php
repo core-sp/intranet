@@ -34,4 +34,19 @@ class AttachmentsController extends Controller
 
         return response()->json(['fileName' => $name]);
     }
+
+    public function uploadCsv(Request $request)
+    {
+        $file = $request->file('file');
+
+        if($file->getClientMimeType() !== 'text/csv') {
+            return response()->json(['message' => 'Tipo de arquivo não suportado']);
+        }
+
+        $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $file->getClientOriginalExtension();
+
+        $file->move(public_path('/storage/csv/'), $name);
+
+        return response()->json(['fileName' => $name]);
+    }
 }

@@ -50,6 +50,19 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
+                    <h4 class="mb-0"><i class="far fa-file-alt"></i> Protestos</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-0 list-unstyled">
+                        <li><a href="{{ route('protestos.index') }}">Protestos</a></li>
+                        <li><a href="{{ route('protestos.remessa') }}">Nova remessa</a></li>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
                     <h4 class="mb-0"><i class="fas fa-globe"></i> Portal</h4>
                 </div>
                 <div class="card-body">

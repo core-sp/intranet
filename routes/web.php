@@ -35,7 +35,11 @@ Route::group(['middleware' => 'auth'], function(){
     Route::post('/tickets/{ticket}/interactions', 'InteractionsController@store');
     // File upload and download
     Route::post('/upload', 'AttachmentsController@upload');
-    Route::get('/protestos', 'ProtestoController@index');
+    Route::post('/upload-csv', 'AttachmentsController@uploadCsv');
+    // Protestos
+    Route::get('/protestos', 'ProtestoController@index')->name('protestos.index');
+    Route::get('/protestos/remessa', 'ProtestoController@remessaView')->name('protestos.remessa');
+    Route::post('/protestos/remessa', 'ProtestoController@send')->name('remessa.send');
 });
 
 Auth::routes();

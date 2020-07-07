@@ -204,3 +204,7 @@ footer {
 .lh-1 {
     line-height: 1;
 }
+
+#submit-remessa {
+    display: none;
+}
