@@ -59,6 +59,16 @@ class ProtestoController extends Controller
         $hd->addAttribute('h17', '0001');
     }
 
+    protected function formataData($data)
+    {
+        if($data) {
+            $array = explode('/', $data);
+            return sprintf('%02d', $array[0]) . sprintf('%02d', $array[1]) . $array[2];
+        } else {
+            return date('dmY', strtotime('-1 day'));
+        }
+    }
+
     protected function montaTitulos($xml)
     {
         $count = 1;
@@ -93,8 +103,8 @@ class ProtestoController extends Controller
                 $tr->addAttribute('t11', $titulo['Nº Termo']);
                 $tr->addAttribute('t12', 'CDA');
                 $tr->addAttribute('t13', $titulo['Nº Termo']);
-                $tr->addAttribute('t14', date('dmY', strtotime('-1 day')));
-                $tr->addAttribute('t15', date('dmY', strtotime('-1 day')));
+                $tr->addAttribute('t14', $this->formataData($titulo['Dt.Inclusão']));
+                $tr->addAttribute('t15', $this->formataData($titulo['Data Inscrição']));
                 $tr->addAttribute('t16', '001');
                 $tr->addAttribute('t17', sprintf('%014d',str_replace(',', '', $titulo['Total da Dívida'])));
                 $tr->addAttribute('t18', sprintf('%014d',str_replace(',', '', $titulo['Total da Dívida'])));
